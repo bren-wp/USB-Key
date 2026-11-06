@@ -6,7 +6,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <AssemblyName>Brendigo-USB-Key-Portable</AssemblyName>
     <RootNamespace>Brendigo.USBKey</RootNamespace>
     <ApplicationIcon>..\..\assets\brendigo-usb-key.ico</ApplicationIcon>
