@@ -208,6 +208,12 @@ public partial class MainWindow : Window
         catch (Exception ex) { ShowError("Spremanje postavki nije uspjelo", ex); }
     }
 
+    private void ShowWelcome_Click(object sender, RoutedEventArgs e)
+    {
+        var welcome = new SplashWindow(openDashboard: false) { Owner = this };
+        welcome.ShowDialog();
+    }
+
     private void RequireSelection() =>
         MessageBox.Show(this, "Prvo odaberi USB ključ na popisu.", "Brendigo USB Key",
             MessageBoxButton.OK, MessageBoxImage.Information);
