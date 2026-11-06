@@ -14,7 +14,4 @@
     <Product>Brendigo USB Key</Product>
     <Description>Lokalno upravljanje USB sigurnosnim ključevima za Windows.</Description>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.0" />
-  </ItemGroup>
 </Project>
