@@ -5,7 +5,7 @@
         MinHeight="600" MinWidth="860"
         WindowStartupLocation="CenterScreen" Background="#F2F6FA"
         FontFamily="Segoe UI" FontSize="14">
-  <Grid>
+  <Grid x:Name="LayoutRoot">
     <Grid.ColumnDefinitions>
       <ColumnDefinition x:Name="SidebarColumn" Width="242"/>
       <ColumnDefinition Width="*"/>
@@ -73,11 +73,12 @@
 
         <Border Background="#E6F3FF" BorderBrush="#B5D9FA" BorderThickness="1"
                 Padding="16" CornerRadius="12" Margin="0,0,0,19">
-          <StackPanel Orientation="Horizontal">
-            <TextBlock Text="ⓘ" FontSize="22" Margin="0,0,12,0" Foreground="#0F6BFF"/>
+          <DockPanel LastChildFill="True">
+            <TextBlock DockPanel.Dock="Left" Text="ⓘ" FontSize="22"
+                       Margin="0,0,12,0" Foreground="#0F6BFF"/>
             <TextBlock TextWrapping="Wrap" Foreground="#0B2D5C" VerticalAlignment="Center"
                        Text="Ova verzija registrira USB ključeve i zaključava aktivnu Windows sesiju. Otključavanje zaslona prijave USB-om još nije omogućeno; Windows lozinka i Hello ostaju dostupni."/>
-          </StackPanel>
+          </DockPanel>
         </Border>
 
         <StackPanel x:Name="DashboardPage">
@@ -220,6 +221,12 @@
                          FontWeight="Bold" Margin="0,0,0,12"/>
               <TextBlock TextWrapping="Wrap" Foreground="#486681"
                          Text="Brendigo USB Key ne zamjenjuje Windows lozinku, Windows Hello ili druge službene načine prijave. Ako se USB stick pokvari ili izgubi, prijavi se u Windows uobičajenim načinom i zatim opozovi izgubljeni ključ u aplikaciji."/>
+              <TextBlock x:Name="RecoveryKeysStatus" FontSize="14" FontWeight="SemiBold"
+                         Foreground="#0B2D5C" TextWrapping="Wrap"
+                         Margin="0,16,0,10" Text="Provjeri broj registriranih USB ključeva."/>
+              <Button Content="+ Registriraj rezervni USB" Click="Enroll_Click"
+                      Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left"
+                      Margin="0,0,0,10" ToolTip="Dodaj novi fizički USB s vlastitim tokenom."/>
               <Button Content="Otvori Windows postavke prijave" Click="OpenSignInSettings_Click"
                       Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Margin="0,20,0,10"/>
               <Button Content="Provjeri rezervnu prijavu (zaključava zaslon)" Click="TestRecovery_Click"
@@ -271,10 +278,14 @@
             <StackPanel>
               <TextBlock Text="Ponašanje aplikacije" FontSize="20" FontWeight="Bold" Margin="0,0,0,16"/>
               <CheckBox x:Name="AutoLockCheck" Content="Zaključaj Windows kada nestane posljednji registrirani USB"
+                        AutomationProperties.Name="Omogući automatsko zaključavanje nakon uklanjanja USB-a"
+                        ToolTip="Zaključava već otključanu Windows sesiju. Ne može otključati Windows prijavu."
                         FontSize="15" Margin="0,0,0,9"/>
               <TextBlock TextWrapping="Wrap" Foreground="#597392" Margin="22,0,0,24"
                          Text="Radi samo dok je aplikacija pokrenuta. Zaključavanje se aktivira tek nakon što je u toj sesiji prepoznat ispravan USB. Tri uzastopna neuspješna skeniranja pokreću zaključavanje."/>
               <CheckBox x:Name="StartupCheck" Content="Pokreni Brendigo USB Key nakon prijave u Windows"
+                        AutomationProperties.Name="Automatski pokreni Brendigo USB Key nakon Windows prijave"
+                        ToolTip="Automatsko pokretanje radi samo sa stalne lokalne lokacije aplikacije."
                         FontSize="15" Margin="0,0,0,9"/>
               <TextBlock TextWrapping="Wrap" Foreground="#597392" Margin="22,0,0,24"
                          Text="Pokretanje nakon prijave ne štiti samo Windowsovo prijavljivanje. Ne koristimo automatsko upisivanje Windows lozinke."/>

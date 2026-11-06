@@ -38,6 +38,7 @@ public partial class MainWindow : Window
         StartupCheck.IsChecked = StartupService.IsEnabled();
         ShowPage("Dashboard");
         SizeChanged += (_, _) => UpdateResponsiveLayout();
+        LayoutRoot.SizeChanged += (_, _) => UpdateResponsiveLayout();
         Loaded += (_, _) => UpdateResponsiveLayout();
         _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
         _timer.Tick += (_, _) => RefreshStatus();
@@ -51,6 +52,9 @@ public partial class MainWindow : Window
         else
         {
             RegisteredCount.Text = _manager.Registered.Count.ToString();
+            RecoveryKeysStatus.Text = _manager.Registered.Count < 2
+                ? "Za rezervu preporučujemo najmanje dva neovisna USB sticka."
+                : $"Registriranih USB ključeva: {_manager.Registered.Count}.";
             ConnectedCount.Text = "0";
             AutoLockState.Text = _manager.AutoLock ? "Uključeno" : "Isključeno";
             StatusMessage.Text = "Nema priključenih USB ključeva na testnom računalu.";
@@ -108,13 +112,16 @@ public partial class MainWindow : Window
 
     private void UpdateResponsiveLayout()
     {
-        SidebarColumn.Width = new GridLength(ActualWidth < 1090 ? 206 : 242);
-        LocalStatusBadge.Visibility = ActualWidth < 1110
+        // RenderTargetBitmap sizes the WPF root without showing a native Window.
+        // Use the arranged root width for reliable desktop and responsive previews.
+        double width = LayoutRoot.ActualWidth > 0 ? LayoutRoot.ActualWidth : Width;
+        SidebarColumn.Width = new GridLength(width < 1090 ? 206 : 242);
+        LocalStatusBadge.Visibility = width < 1110
             ? Visibility.Collapsed : Visibility.Visible;
 
         // Reflow all metric cards and the quick-actions panel rather than
         // squeezing important controls into unreadable columns on small windows.
-        bool compact = ActualWidth < 1150;
+        bool compact = width < 1150;
         for (int i = 0; i < DashboardMetricsGrid.ColumnDefinitions.Count; i++)
             DashboardMetricsGrid.ColumnDefinitions[i].Width =
                 compact && i > 0 ? new GridLength(0) : new GridLength(1, GridUnitType.Star);
@@ -197,6 +204,12 @@ public partial class MainWindow : Window
 
             KeysEmptyHint.Visibility = rows.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
             RegisteredCount.Text = rows.Count.ToString();
+            RecoveryKeysStatus.Text = rows.Count switch
+            {
+                0 => "Nema registriranih USB ključeva. Preporučujemo dva zasebna sticka.",
+                1 => "Registriran je 1 USB. Dodaj još jedan fizički stick kao rezervu.",
+                _ => $"Registriranih USB ključeva: {rows.Count}. Čuvaj rezervni stick na odvojenoj lokaciji."
+            };
             ConnectedCount.Text = connected.Count.ToString();
             AutoLockState.Text = _manager.AutoLock ? "Uključeno" : "Isključeno";
             StatusMessage.Text = connected.Count > 0
