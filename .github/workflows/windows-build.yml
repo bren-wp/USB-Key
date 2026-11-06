@@ -1,43 +1,88 @@
-name: Windows Build
+name: Windows Build and Alpha Release
 
 on:
   push:
     branches: [main, "feat/**"]
-    tags: ["v*"]
   pull_request:
     branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
     runs-on: windows-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Install .NET 10
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
+
       - name: Restore
         run: dotnet restore src/Brendigo.USBKey/Brendigo.USBKey.csproj
-      - name: Compile WPF
+
+      - name: Compile WPF (warnings as errors)
         run: dotnet build src/Brendigo.USBKey/Brendigo.USBKey.csproj --configuration Release --no-restore -warnaserror
-      - name: Publish self-contained portable Windows app
+
+      - name: Run USB token smoke tests
+        run: dotnet run --project tests/Brendigo.USBKey.Smoke/Brendigo.USBKey.Smoke.csproj --configuration Release
+
+      - name: Publish portable EXE, ZIP, USB setup kit and checksums
         shell: pwsh
         run: |
-          dotnet publish src/Brendigo.USBKey/Brendigo.USBKey.csproj --configuration Release --runtime win-x64 --self-contained true --output artifacts/win-x64 -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          Compress-Archive -Path artifacts/win-x64/* -DestinationPath artifacts/Brendigo-USB-Key-win-x64-portable.zip
-          Get-FileHash artifacts/Brendigo-USB-Key-win-x64-portable.zip -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  Brendigo-USB-Key-win-x64-portable.zip" } | Out-File artifacts/SHA256SUMS.txt -Encoding utf8
-      - name: Upload unsigned Windows build
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force -Path artifacts | Out-Null
+          dotnet publish src/Brendigo.USBKey/Brendigo.USBKey.csproj --configuration Release --runtime win-x64 --self-contained true --output artifacts/publish -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false
+          if ($LASTEXITCODE -ne 0) { throw "Windows publish failed" }
+          $exe = "artifacts/publish/Brendigo-USB-Key-Portable.exe"
+          if (!(Test-Path $exe)) { throw "Portable executable not found" }
+          Copy-Item $exe "artifacts/Brendigo-USB-Key-Portable.exe"
+          New-Item -ItemType Directory -Force -Path artifacts/package | Out-Null
+          Copy-Item "artifacts/publish/*" "artifacts/package/" -Recurse
+          Copy-Item "LICENSE" "artifacts/package/LICENSE"
+          Copy-Item "README.md" "artifacts/package/README.md"
+          Copy-Item "SECURITY.md" "artifacts/package/SECURITY.md"
+          New-Item -ItemType Directory -Force -Path artifacts/package/USB-Guides | Out-Null
+          Copy-Item "docs/SETUP-USB-HR.md" "artifacts/package/USB-Guides/"
+          Copy-Item "docs/SETUP-USB-EN.md" "artifacts/package/USB-Guides/"
+          Copy-Item "docs/TROUBLESHOOTING-HR.md" "artifacts/package/USB-Guides/"
+          Copy-Item "docs/RELEASE-NOTES-HR.md" "artifacts/package/USB-Guides/"
+          Compress-Archive -Path artifacts/package/* -DestinationPath artifacts/Brendigo-USB-Key-win-x64-portable.zip -Force
+          New-Item -ItemType Directory -Force -Path artifacts/usb-kit | Out-Null
+          Copy-Item "docs/SETUP-USB-HR.md" "artifacts/usb-kit/"
+          Copy-Item "docs/SETUP-USB-EN.md" "artifacts/usb-kit/"
+          Copy-Item "docs/TROUBLESHOOTING-HR.md" "artifacts/usb-kit/"
+          "Brendigo USB Key - USB Setup Kit. This package contains only instructions. Register each USB separately. Never copy key.json between USB drives. Windows sign-in still requires your normal Windows password or Hello. Author: Brendigo | brendigo.com" | Set-Content "artifacts/usb-kit/START-HERE.txt" -Encoding utf8
+          Compress-Archive -Path artifacts/usb-kit/* -DestinationPath artifacts/Brendigo-USB-Key-USB-Setup-Kit.zip -Force
+          $files = @("Brendigo-USB-Key-Portable.exe", "Brendigo-USB-Key-win-x64-portable.zip", "Brendigo-USB-Key-USB-Setup-Kit.zip")
+          $sums = foreach ($file in $files) { $hash = (Get-FileHash "artifacts/$file" -Algorithm SHA256).Hash.ToLowerInvariant(); "$hash  $file" }
+          $sums | Set-Content "artifacts/SHA256SUMS.txt" -Encoding utf8
+          foreach ($line in $sums) { Write-Host $line }
+
+      - name: Upload Windows test artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Brendigo-USB-Key-win-x64-unsigned
+          name: Brendigo-USB-Key-Windows-Alpha
           path: |
+            artifacts/Brendigo-USB-Key-Portable.exe
             artifacts/Brendigo-USB-Key-win-x64-portable.zip
+            artifacts/Brendigo-USB-Key-USB-Setup-Kit.zip
             artifacts/SHA256SUMS.txt
           if-no-files-found: error
+          retention-days: 30
+
+      - name: Publish GitHub prerelease on main push
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $tag = "v0.2.0-alpha.$env:GITHUB_RUN_NUMBER"
+          gh release create $tag "artifacts/Brendigo-USB-Key-Portable.exe" "artifacts/Brendigo-USB-Key-win-x64-portable.zip" "artifacts/Brendigo-USB-Key-USB-Setup-Kit.zip" "artifacts/SHA256SUMS.txt" --repo "$env:GITHUB_REPOSITORY" --target "$env:GITHUB_SHA" --title "Brendigo USB Key $tag (testna alfa)" --notes-file "docs/RELEASE-NOTES-HR.md" --prerelease
+          if ($LASTEXITCODE -ne 0) { throw "GitHub prerelease creation failed" }
