@@ -1,0 +1,261 @@
+<Window x:Class="Brendigo.USBKey.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Brendigo USB Key" Height="820" Width="1280"
+        MinHeight="690" MinWidth="1000"
+        WindowStartupLocation="CenterScreen" Background="#F2F6FA"
+        FontFamily="Segoe UI" FontSize="14">
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="242"/>
+      <ColumnDefinition Width="*"/>
+    </Grid.ColumnDefinitions>
+
+    <Border Grid.Column="0" Background="#0B2D5C">
+      <DockPanel Margin="16,26,16,18" LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top">
+          <StackPanel Orientation="Horizontal" Margin="9,0,0,40">
+            <Grid Width="52" Height="58" Margin="0,0,11,0">
+              <Path Data="M 26,3 L 47,13 L 44,34 C 41,44 33,50 26,54 C 18,50 10,44 8,34 L 5,13 Z"
+                    Fill="#0F6BFF" Stroke="#65DEDA" StrokeThickness="2"/>
+              <TextBlock Text="USB" FontWeight="Bold" FontSize="12" Foreground="White"
+                         HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+            <StackPanel VerticalAlignment="Center">
+              <TextBlock Text="Brendigo" Foreground="White" FontWeight="Bold" FontSize="23"/>
+              <TextBlock Text="USB Key" Foreground="#62E5D9" FontWeight="SemiBold" FontSize="21"/>
+            </StackPanel>
+          </StackPanel>
+          <TextBlock Text="UPRAVLJANJE SIGURNOŠĆU" FontSize="10" FontWeight="Bold"
+                     Foreground="#9FC0E2" Margin="16,0,0,13"/>
+          <Button x:Name="DashboardNav" Content="⌂   Nadzorna ploča" Tag="Dashboard"
+                  Style="{StaticResource NavButton}" Click="Nav_Click"/>
+          <Button x:Name="KeysNav" Content="▣   USB ključevi" Tag="Keys"
+                  Style="{StaticResource NavButton}" Click="Nav_Click"/>
+          <Button x:Name="RecoveryNav" Content="◇   Rezervni pristup" Tag="Recovery"
+                  Style="{StaticResource NavButton}" Click="Nav_Click"/>
+          <Button x:Name="SecurityNav" Content="≡   Sigurnosni dnevnik" Tag="Security"
+                  Style="{StaticResource NavButton}" Click="Nav_Click"/>
+          <Button x:Name="SettingsNav" Content="⚙   Postavke" Tag="Settings"
+                  Style="{StaticResource NavButton}" Click="Nav_Click"/>
+          <Button x:Name="AboutNav" Content="ⓘ   O programu" Tag="About"
+                  Style="{StaticResource NavButton}" Click="Nav_Click"/>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Bottom" Margin="14">
+          <Border Background="#194675" CornerRadius="12" Padding="12">
+            <StackPanel>
+              <TextBlock Text="BRENDIGO USB KEY" FontWeight="Bold" FontSize="11" Foreground="#64DFD5"/>
+              <TextBlock Text="v0.1.0 · Windows" Foreground="White" Margin="0,6,0,0"/>
+              <TextBlock Text="Brendigo · brendigo.com" FontSize="11" Foreground="#BCD4EC"
+                         Margin="0,4,0,0"/>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </DockPanel>
+    </Border>
+
+    <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+      <StackPanel Margin="30,28,26,24">
+        <Grid Margin="0,0,0,22">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          <StackPanel>
+            <TextBlock x:Name="PageTitle" Text="Nadzorna ploča" FontSize="32"
+                       FontWeight="Bold" Foreground="#0B2D5C"/>
+            <TextBlock x:Name="PageSubtitle" Margin="0,5,0,0" FontSize="14"
+                       Foreground="#597392" Text="Lokalni nadzor registriranih USB ključeva."/>
+          </StackPanel>
+          <Border Grid.Column="1" Background="#E1F6F1" BorderBrush="#B6EADA"
+                  BorderThickness="1" CornerRadius="10" Padding="14,10"
+                  VerticalAlignment="Center">
+            <TextBlock Text="●  LOKALNA APLIKACIJA" Foreground="#087969"
+                       FontWeight="Bold" FontSize="11"/>
+          </Border>
+        </Grid>
+
+        <Border Background="#E6F3FF" BorderBrush="#B5D9FA" BorderThickness="1"
+                Padding="16" CornerRadius="12" Margin="0,0,0,19">
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="ⓘ" FontSize="22" Margin="0,0,12,0" Foreground="#0F6BFF"/>
+            <TextBlock TextWrapping="Wrap" Foreground="#0B2D5C" VerticalAlignment="Center"
+                       Text="Ova verzija registrira USB ključeve i zaključava aktivnu Windows sesiju. Otključavanje zaslona prijave USB-om još nije omogućeno; Windows lozinka i Hello ostaju dostupni."/>
+          </StackPanel>
+        </Border>
+
+        <StackPanel x:Name="DashboardPage">
+          <Grid Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border Style="{StaticResource Card}" Grid.Column="0">
+              <StackPanel>
+                <TextBlock Text="REGISTRIRANI KLJUČEVI" FontSize="11" FontWeight="Bold" Foreground="#587698"/>
+                <TextBlock x:Name="RegisteredCount" Text="0" FontSize="42" FontWeight="Bold" Margin="0,8,0,0"/>
+                <TextBlock Text="Pojedinačno registrirani USB stickovi" FontSize="12" Foreground="#67819A" TextWrapping="Wrap"/>
+              </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}" Grid.Column="1">
+              <StackPanel>
+                <TextBlock Text="TRENUTAČNO SPOJENI" FontSize="11" FontWeight="Bold" Foreground="#587698"/>
+                <TextBlock x:Name="ConnectedCount" Text="0" FontSize="42" FontWeight="Bold" Margin="0,8,0,0"/>
+                <TextBlock Text="Ključevi s valjanim lokalnim dokazom" FontSize="12" Foreground="#67819A" TextWrapping="Wrap"/>
+              </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}" Grid.Column="2">
+              <StackPanel>
+                <TextBlock Text="AUTO-ZAKLJUČAVANJE" FontSize="11" FontWeight="Bold" Foreground="#587698"/>
+                <TextBlock x:Name="AutoLockState" Text="Isključeno" FontSize="22" FontWeight="Bold" Margin="0,17,0,4"/>
+                <TextBlock Text="Zaključavanje nakon vađenja zadnjeg USB-a" FontSize="12" Foreground="#67819A" TextWrapping="Wrap"/>
+              </StackPanel>
+            </Border>
+          </Grid>
+
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*"/>
+              <ColumnDefinition Width="290"/>
+            </Grid.ColumnDefinitions>
+            <Border Style="{StaticResource Card}" Grid.Column="0" MinHeight="290">
+              <StackPanel>
+                <TextBlock Text="Tvoji USB ključevi" FontSize="20" FontWeight="Bold" Margin="0,0,0,9"/>
+                <TextBlock x:Name="StatusMessage" Text="Provjera USB uređaja..."
+                           TextWrapping="Wrap" Foreground="#597392" Margin="0,0,0,14"/>
+                <ListBox x:Name="RecentKeys" BorderThickness="0" Background="Transparent"
+                         DisplayMemberPath="Name" MinHeight="130"/>
+              </StackPanel>
+            </Border>
+            <Border Grid.Column="1" Style="{StaticResource Card}" Margin="0,0,0,12">
+              <StackPanel>
+                <TextBlock Text="Brze radnje" FontSize="20" FontWeight="Bold" Margin="0,0,0,14"/>
+                <Button Content="+  Registriraj USB" Style="{StaticResource PrimaryButton}"
+                        Click="Enroll_Click" Margin="0,0,0,10"/>
+                <Button Content="⟳  Osvježi status" Style="{StaticResource SecondaryButton}"
+                        Click="ManualRefresh_Click" Margin="0,0,0,10"/>
+                <Button Content="🔒  Zaključaj Windows" Style="{StaticResource SecondaryButton}"
+                        Click="LockNow_Click"/>
+              </StackPanel>
+            </Border>
+          </Grid>
+        </StackPanel>
+
+        <StackPanel x:Name="KeysPage" Visibility="Collapsed">
+          <Border Style="{StaticResource Card}" Padding="22">
+            <StackPanel>
+              <DockPanel LastChildFill="False" Margin="0,0,0,16">
+                <TextBlock Text="Svaki stick ima zaseban nasumični ključ." FontSize="14"
+                           Foreground="#587698" VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                <Button Content="+  Dodaj USB" DockPanel.Dock="Right"
+                        Style="{StaticResource PrimaryButton}" Click="Enroll_Click"/>
+              </DockPanel>
+              <DataGrid x:Name="KeysGrid" AutoGenerateColumns="False"
+                        IsReadOnly="True" SelectionMode="Single"
+                        SelectionUnit="FullRow" CanUserAddRows="False"
+                        CanUserDeleteRows="False" HeadersVisibility="Column"
+                        GridLinesVisibility="Horizontal" RowHeight="44"
+                        FontSize="13" MinHeight="220"
+                        Background="White" BorderThickness="0">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="Naziv ključa" Binding="{Binding Name}" Width="2*"/>
+                  <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*"/>
+                  <DataGridTextColumn Header="Registriran" Binding="{Binding Registered}" Width="1.5*"/>
+                  <DataGridTextColumn Header="Zadnji put viđen" Binding="{Binding LastSeen}" Width="1.5*"/>
+                </DataGrid.Columns>
+              </DataGrid>
+              <WrapPanel Margin="0,17,0,0">
+                <Button Content="Preimenuj odabrani" Click="Rename_Click"
+                        Style="{StaticResource SecondaryButton}" Margin="0,0,8,8"/>
+                <Button Content="Opozovi odabrani" Click="Revoke_Click"
+                        Style="{StaticResource DangerButton}" Margin="0,0,8,8"/>
+                <Button Content="Osvježi popis" Click="ManualRefresh_Click"
+                        Style="{StaticResource SecondaryButton}" Margin="0,0,8,8"/>
+              </WrapPanel>
+            </StackPanel>
+          </Border>
+          <Border Style="{StaticResource Card}">
+            <TextBlock TextWrapping="Wrap" Foreground="#486681"
+                       Text="Više različitih USB stickova može biti registrirano na istom računalu. Nemoj kopirati datoteku ključa s jednog sticka na drugi: kopija nije neovisan rezervni ključ. Obični USB stick može se klonirati; za višu sigurnost potreban je kriptografski hardver."/>
+          </Border>
+        </StackPanel>
+
+        <StackPanel x:Name="RecoveryPage" Visibility="Collapsed">
+          <Border Style="{StaticResource Card}">
+            <StackPanel>
+              <TextBlock Text="Rezervni pristup uvijek mora ostati dostupan" FontSize="21"
+                         FontWeight="Bold" Margin="0,0,0,12"/>
+              <TextBlock TextWrapping="Wrap" Foreground="#486681"
+                         Text="Brendigo USB Key ne zamjenjuje Windows lozinku, Windows Hello ili druge službene načine prijave. Ako se USB stick pokvari ili izgubi, prijavi se u Windows uobičajenim načinom i zatim opozovi izgubljeni ključ u aplikaciji."/>
+              <Button Content="Otvori Windows postavke prijave" Click="OpenSignInSettings_Click"
+                      Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Margin="0,20,0,10"/>
+              <Button Content="Provjeri rezervnu prijavu (zaključava zaslon)" Click="TestRecovery_Click"
+                      Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left"/>
+            </StackPanel>
+          </Border>
+          <Border Style="{StaticResource Card}">
+            <StackPanel>
+              <TextBlock Text="Savjeti za oporavak" FontWeight="Bold" FontSize="18" Margin="0,0,0,10"/>
+              <TextBlock TextWrapping="Wrap"
+                         Text="• Registriraj barem dva odvojena USB sticka.&#10;• Provjeri radi li Windows lozinka ili Hello prije uključivanja automatskog zaključavanja.&#10;• Ako koristiš BitLocker, spremi njegov ključ za oporavak izvan računala.&#10;• Rezervni USB čuvaj na drugom sigurnom mjestu."/>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <StackPanel x:Name="SecurityPage" Visibility="Collapsed">
+          <Border Style="{StaticResource Card}">
+            <StackPanel>
+              <DockPanel Margin="0,0,0,14" LastChildFill="False">
+                <TextBlock Text="Lokalni sigurnosni događaji" FontSize="20" FontWeight="Bold"
+                           VerticalAlignment="Center" DockPanel.Dock="Left"/>
+                <Button Content="Otvori mapu zapisnika" Click="OpenDataFolder_Click"
+                        Style="{StaticResource SecondaryButton}" DockPanel.Dock="Right"/>
+              </DockPanel>
+              <TextBox x:Name="EventLogBox" FontFamily="Consolas" FontSize="12"
+                       TextWrapping="Wrap" AcceptsReturn="True"
+                       VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                       IsReadOnly="True" Height="420" Padding="12"
+                       Background="#F8FBFE" BorderBrush="#D7E6F3"/>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <StackPanel x:Name="SettingsPage" Visibility="Collapsed">
+          <Border Style="{StaticResource Card}">
+            <StackPanel>
+              <TextBlock Text="Ponašanje aplikacije" FontSize="20" FontWeight="Bold" Margin="0,0,0,16"/>
+              <CheckBox x:Name="AutoLockCheck" Content="Zaključaj Windows kada nestane posljednji registrirani USB"
+                        FontSize="15" Margin="0,0,0,9"/>
+              <TextBlock TextWrapping="Wrap" Foreground="#597392" Margin="22,0,0,24"
+                         Text="Radi samo dok je aplikacija pokrenuta. Zaključavanje se aktivira tek nakon što je u toj sesiji prepoznat ispravan USB. Dva uzastopna neuspješna skeniranja pokreću zaključavanje."/>
+              <CheckBox x:Name="StartupCheck" Content="Pokreni Brendigo USB Key nakon prijave u Windows"
+                        FontSize="15" Margin="0,0,0,9"/>
+              <TextBlock TextWrapping="Wrap" Foreground="#597392" Margin="22,0,0,24"
+                         Text="Pokretanje nakon prijave ne štiti samo Windowsovo prijavljivanje. Ne koristimo automatsko upisivanje Windows lozinke."/>
+              <Button Content="Spremi postavke" Click="SaveSettings_Click"
+                      Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left"/>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <StackPanel x:Name="AboutPage" Visibility="Collapsed">
+          <Border Style="{StaticResource Card}">
+            <StackPanel>
+              <TextBlock Text="Brendigo USB Key" FontWeight="Bold" FontSize="28"/>
+              <TextBlock Text="Verzija 0.1.0 — početna razvojna inačica" Foreground="#597392"
+                         Margin="0,5,0,15"/>
+              <TextBlock Text="Autor: Brendigo" Margin="0,0,0,4"/>
+              <TextBlock Text="Web: https://brendigo.com" Margin="0,0,0,14"/>
+              <TextBlock TextWrapping="Wrap"
+                         Text="Windows aplikacija za lokalnu registraciju i provjeru USB ključeva te opcionalno zaključavanje aktivne sesije. Projekt je u razvoju. Nema integraciju s Windows Credential Providerom, FIDO2 prijavom ili Windowsovim zaslonom za prijavu."/>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <TextBlock Text="Brendigo USB Key · Lokalna obrada · Bez pohrane Windows lozinke"
+                   Margin="4,15,0,0" Foreground="#6E849B" FontSize="11"/>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</Window>
