@@ -49,8 +49,8 @@ foreach ($name in $images) {
     }
     $checks++
 }
-if (@($images).Count -ne 12) {
-    throw "README must link all 12 WPF snapshots, found $(@($images).Count)."
+if (@($images).Count -ne 13) {
+    throw "README must link all 13 WPF snapshots, found $(@($images).Count)."
 }
 
 foreach ($file in @(

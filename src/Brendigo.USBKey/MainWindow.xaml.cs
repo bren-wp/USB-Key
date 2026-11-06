@@ -243,12 +243,8 @@ public partial class MainWindow : Window
     private void Revoke_Click(object sender, RoutedEventArgs e)
     {
         if (KeysGrid.SelectedItem is not KeyRow item) { RequireSelection(); return; }
-        var confirmation = MessageBox.Show(this,
-            "Opozvati ključ \"" + item.Name + "\" na ovom računalu?\n\n" +
-            "USB datoteka ostat će na sticku, ali ovaj Windows račun više joj neće vjerovati. " +
-            "Provjeri svoj rezervni način prijave prije opoziva.",
-            "Potvrda opoziva", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-        if (confirmation != MessageBoxResult.Yes) return;
+        var confirmation = new RevokeDialog(item.Name) { Owner = this };
+        if (confirmation.ShowDialog() != true) return;
         try { _manager.Revoke(item.Id); RefreshStatus(); }
         catch (Exception ex) { ShowError("Opoziv nije uspio", ex); }
     }

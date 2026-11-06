@@ -51,7 +51,7 @@ Ove PNG snimke nastale su **iz stvarnih WPF/XAML kontrola** automatskim renderir
 ### Svaki zaslon — provjeren WPF prikaz
 
 <details>
-<summary><strong>Otvori galeriju svih 12 zaslona i dijaloga</strong></summary>
+<summary><strong>Otvori galeriju svih 13 zaslona i dijaloga</strong></summary>
 
 | USB Keys | Registracija USB-a |
 |:---:|:---:|
@@ -72,6 +72,10 @@ Ove PNG snimke nastale su **iz stvarnih WPF/XAML kontrola** automatskim renderir
 | Onboarding: završetak | Preimenovanje USB-a |
 |:---:|:---:|
 | <img src="assets/screenshots/onboarding-finish.png" width="480" alt="Završetak vodiča"> | <img src="assets/screenshots/rename-usb.png" width="480" alt="Dijalog za preimenovanje USB-a"> |
+
+| Opoziv USB ključa |
+|:---:|
+| <img src="assets/screenshots/revoke-usb.png" width="480" alt="Brendirani dijalog za opoziv USB-a s potvrdom"> |
 
 </details>
 

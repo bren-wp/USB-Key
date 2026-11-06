@@ -48,9 +48,11 @@ internal static class Program
         Snapshot(enroll, output, "register-usb.png"); saved++;
         var rename = new NameDialog("Glavni USB");
         Snapshot(rename, output, "rename-usb.png"); saved++;
+        var revoke = new RevokeDialog("Glavni USB");
+        Snapshot(revoke, output, "revoke-usb.png"); saved++;
 
-        if (saved != 12)
-            throw new InvalidOperationException($"Expected 12 screens, got {saved}.");
+        if (saved != 13)
+            throw new InvalidOperationException($"Expected 13 screens, got {saved}.");
 
         Console.WriteLine($"PASS: captured {saved} actual WPF-rendered UI views in {output}.");
         return 0;
