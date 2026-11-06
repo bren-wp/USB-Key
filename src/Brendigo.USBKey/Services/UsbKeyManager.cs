@@ -24,8 +24,7 @@ public sealed class UsbKeyManager
     private readonly string _eventsPath;
     private RegistryState _state;
     private HashSet<Guid> _previouslySeen = new();
-    private bool _armed;
-    private int _missedScans;
+    private readonly UsbLockMonitor _lockMonitor = new();
 
     public UsbKeyManager()
     {
@@ -149,13 +148,28 @@ public sealed class UsbKeyManager
     public IReadOnlyList<ConnectedKey> Scan()
     {
         var connected = new List<ConnectedKey>();
-        foreach (var root in AvailableDrives())
+        bool uncertain = false;
+        IReadOnlyList<string> drives;
+        try { drives = AvailableDrives(); }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            // Do not interpret a failing drive enumeration as removal of the last key.
+            drives = Array.Empty<string>();
+            uncertain = true;
+        }
+        foreach (var root in drives)
         {
             try
             {
                 string path = Path.Combine(root, TokenDirectory, TokenFilename);
                 UsbTokenFile? token = ReadToken(path);
-                if (token == null) continue;
+                if (token is null)
+                {
+                    // An existing but unreadable token is not proof of device removal.
+                    // Fail open: never lock based on an uncertain scan.
+                    if (File.Exists(path)) uncertain = true;
+                    continue;
+                }
                 KeyRecord? key = _state.Keys.FirstOrDefault(k => k.Id == token.Id);
                 if (key == null) continue;
 
@@ -172,7 +186,8 @@ public sealed class UsbKeyManager
                 or JsonException or FormatException or CryptographicException
                 or ArgumentException)
             {
-                // A corrupt, untrusted, or removed drive is never a valid key.
+                // A corrupt or inaccessible USB cannot count as proof of absence.
+                uncertain = true;
             }
         }
 
@@ -186,17 +201,10 @@ public sealed class UsbKeyManager
         }
         _previouslySeen = ids;
 
-        // Arm only after a valid key was actually present in THIS app session.
-        // Three missed polls (approximately nine seconds) reduce false locking after USB re-enumeration.
-        if (connected.Count > 0)
+        // Only three consecutive *reliable* scans with no registered USB may lock.
+        // Any enumeration/read error resets the absence countdown (fail-open).
+        if (_lockMonitor.Observe(connected.Count, scanReliable: !uncertain, enabled: _state.AutoLock))
         {
-            _armed = true;
-            _missedScans = 0;
-        }
-        else if (_armed && _state.AutoLock && ++_missedScans >= 3)
-        {
-            _armed = false;
-            _missedScans = 0;
             bool accepted = LockWorkStation();
             WriteEvent(accepted
                 ? "Uklonjen posljednji aktivni USB ključ; zatraženo zaključavanje Windows sesije."
@@ -207,8 +215,7 @@ public sealed class UsbKeyManager
 
     public void ResetMonitor()
     {
-        _armed = false;
-        _missedScans = 0;
+        _lockMonitor.Reset();
         _previouslySeen.Clear();
     }
 

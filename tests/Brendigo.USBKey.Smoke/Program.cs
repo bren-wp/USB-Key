@@ -43,4 +43,25 @@ invalid.Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(16));
 Check(!TokenCodec.TryParse(JsonSerializer.SerializeToUtf8Bytes(invalid), out _),
     "Short secret rejected");
 
-Console.WriteLine($"All {checks} token smoke checks passed.");
+
+var monitor = new UsbLockMonitor();
+Check(!monitor.Observe(0, true, true), "Cannot auto-lock before a valid USB was seen");
+Check(!monitor.Observe(2, true, true), "Two recognized USB sticks arm monitoring");
+Check(monitor.Armed && monitor.AbsentScans == 0, "Monitoring arms only after valid USB presence");
+Check(!monitor.Observe(1, true, true), "Removing one of two USBs cannot lock");
+Check(!monitor.Observe(0, true, true), "First reliable absent scan does not lock");
+Check(!monitor.Observe(0, false, true), "Uncertain scan must not lock");
+Check(monitor.AbsentScans == 0, "Uncertain scan resets absence countdown");
+Check(!monitor.Observe(0, true, true), "Reliable absence count restarts");
+Check(!monitor.Observe(0, true, true), "Second reliable absence does not lock");
+Check(monitor.Observe(0, true, true), "Third reliable absence requests a single lock");
+Check(!monitor.Observe(0, true, true), "No repeated lock without re-arming");
+Check(!monitor.Observe(1, true, true), "Returned key re-arms after lock");
+Check(!monitor.Observe(0, true, false), "Disabling auto-lock never locks");
+Check(!monitor.Armed, "Disabling auto-lock disarms monitor");
+monitor.Observe(1, true, true);
+monitor.Reset();
+Check(!monitor.Observe(0, true, true), "Settings change resets monitoring");
+Check(!monitor.Observe(0, false, true), "No lock on an unreadable device after reset");
+
+Console.WriteLine($"All {checks} USB security smoke checks passed.");
