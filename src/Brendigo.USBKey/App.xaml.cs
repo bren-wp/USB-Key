@@ -34,14 +34,22 @@ public partial class App : Application
         // on onboarding. A manual launch opens the four-step welcome screen.
         bool autoStart = e.Args.Any(arg =>
             string.Equals(arg, "--autostart", StringComparison.OrdinalIgnoreCase));
-        if (autoStart)
+        // A previously configured account must never be blocked by onboarding.
+        // The USB registry is only a marker for opening the dashboard, never proof of login.
+        bool existingConfiguration = File.Exists(Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Brendigo", "USBKey", "registry.dat"));
+        if (autoStart || existingConfiguration)
         {
             var dashboard = new MainWindow();
             MainWindow = dashboard;
             dashboard.Show();
-            dashboard.WindowState = WindowState.Minimized;
-            dashboard.ShowInTaskbar = false;
-            dashboard.Hide();
+            if (autoStart)
+            {
+                dashboard.WindowState = WindowState.Minimized;
+                dashboard.ShowInTaskbar = false;
+                dashboard.Hide();
+            }
         }
         else
         {

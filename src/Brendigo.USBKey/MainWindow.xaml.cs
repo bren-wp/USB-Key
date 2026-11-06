@@ -31,6 +31,7 @@ public partial class MainWindow : Window
         AutoLockCheck.IsChecked = _manager.AutoLock;
         StartupCheck.IsChecked = StartupService.IsEnabled();
         ShowPage("Dashboard");
+        SizeChanged += (_, _) => UpdateResponsiveLayout();
         _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
         _timer.Tick += (_, _) => RefreshStatus();
         _timer.Start();
@@ -88,6 +89,20 @@ public partial class MainWindow : Window
         base.OnClosed(e);
     }
 
+    private void UpdateResponsiveLayout()
+    {
+        SidebarColumn.Width = new GridLength(ActualWidth < 1090 ? 206 : 242);
+        LocalStatusBadge.Visibility = ActualWidth < 1110
+            ? Visibility.Collapsed : Visibility.Visible;
+    }
+
+    private void KeysGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        bool selected = KeysGrid.SelectedItem is KeyRow;
+        RenameKeyButton.IsEnabled = selected;
+        RevokeKeyButton.IsEnabled = selected;
+    }
+
     private void Nav_Click(object sender, RoutedEventArgs e)
     {
         if (sender is Button button && button.Tag is string page)
@@ -143,6 +158,7 @@ public partial class MainWindow : Window
             RecentKeys.ItemsSource = rows;
             if (selected.HasValue) KeysGrid.SelectedItem = rows.FirstOrDefault(r => r.Id == selected.Value);
 
+            KeysEmptyHint.Visibility = rows.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
             RegisteredCount.Text = rows.Count.ToString();
             ConnectedCount.Text = connected.Count.ToString();
             AutoLockState.Text = _manager.AutoLock ? "Uključeno" : "Isključeno";
@@ -164,13 +180,7 @@ public partial class MainWindow : Window
     private void Enroll_Click(object sender, RoutedEventArgs e)
     {
         var drives = UsbKeyManager.AvailableDrives();
-        if (drives.Count == 0)
-        {
-            MessageBox.Show(this,
-                "Nije pronađen spreman izmjenjivi USB pogon. Umetni običan USB stick i pokušaj ponovno.",
-                "USB uređaj nije pronađen", MessageBoxButton.OK, MessageBoxImage.Information);
-            return;
-        }
+        // Let the registration dialog remain open while a USB is inserted, then refresh.
         var dialog = new EnrollDialog(drives) { Owner = this };
         if (dialog.ShowDialog() != true) return;
         try
@@ -229,7 +239,9 @@ public partial class MainWindow : Window
     {
         try
         {
-            Process.Start(new ProcessStartInfo("explorer.exe", "/select,\"" + _manager.EventsPath + "\"")
+            string folder = Path.GetDirectoryName(_manager.EventsPath)
+                ?? throw new IOException("Mapa zapisnika nije dostupna.");
+            Process.Start(new ProcessStartInfo("explorer.exe", "\"" + folder + "\"")
             { UseShellExecute = true });
         }
         catch (Exception ex) { ShowError("Nije moguće otvoriti mapu zapisnika", ex); }
