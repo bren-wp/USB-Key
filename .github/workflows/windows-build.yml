@@ -23,6 +23,10 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - name: Verify local WPF events and screen assets
+        shell: pwsh
+        run: ./tools/Check-WPF-UI.ps1
+
       - name: Restore
         run: dotnet restore src/Brendigo.USBKey/Brendigo.USBKey.csproj
 
