@@ -148,4 +148,27 @@ Check(!stayConnected.Observe(0, scanReliable: false, enabled: true),
 Check(!stayConnected.Observe(0, scanReliable: true, enabled: true),
     "After an uncertain scan a fresh reliable absence count begins");
 
+
+// Enrollment must not silently convert untrusted subpaths into root drives.
+Check(UsbEnrollmentRules.RequireDriveRoot("x:\\") == "X:\\",
+    "Plain removable drive roots are normalized");
+bool blockedSubpath = false;
+try { UsbEnrollmentRules.RequireDriveRoot("X:\\unrelated-folder"); }
+catch (IOException) { blockedSubpath = true; }
+Check(blockedSubpath, "Arbitrary paths under USB roots are rejected");
+bool blockedRelative = false;
+try { UsbEnrollmentRules.RequireDriveRoot("X:"); }
+catch (IOException) { blockedRelative = true; }
+Check(blockedRelative, "Drive-relative paths are rejected");
+bool blockedNetwork = false;
+try { UsbEnrollmentRules.RequireDriveRoot("\\\\server\\share\\"); }
+catch (IOException) { blockedNetwork = true; }
+Check(blockedNetwork, "UNC paths are rejected");
+Check(UsbEnrollmentRules.NormalizeName("  Rezervni USB  ") == "Rezervni USB",
+    "USB names are normalized before registering");
+Check(!UsbEnrollmentRules.IsValidName(" \r\n "),
+    "Whitespace and control-only USB names cannot be submitted");
+Check(!UsbEnrollmentRules.IsValidName(new string('x', 65)),
+    "Overlong USB key display names cannot be submitted");
+
 Console.WriteLine($"All {checks} USB security smoke checks passed.");

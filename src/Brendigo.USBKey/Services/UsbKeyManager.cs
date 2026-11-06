@@ -73,16 +73,15 @@ public sealed class UsbKeyManager
 
     public KeyRecord Enroll(string root, string name)
     {
-        name = name.Trim();
-        if (name.Length is < 1 or > 64 || name.Any(char.IsControl))
-            throw new ArgumentException("Naziv mora sadržavati 1–64 znaka bez kontrolnih znakova.");
-
-        // Do not allow arbitrary user-supplied paths or the system drive.
-        string driveRoot = Path.GetPathRoot(Path.GetFullPath(root))
-            ?? throw new IOException("Neispravna lokacija USB uređaja.");
+        name = UsbEnrollmentRules.NormalizeName(name);
+        // Do not silently turn any path on a USB into its drive root.
+        string driveRoot = UsbEnrollmentRules.RequireDriveRoot(root);
         if (!AvailableDrives().Contains(driveRoot, StringComparer.OrdinalIgnoreCase))
             throw new IOException("Odabrani uređaj nije spreman izmjenjivi pogon.");
 
+        if (_state.Keys.Count >= 2048)
+            throw new InvalidOperationException(
+                "Dosegnut je maksimalni broj registriranih USB ključeva.");
         string directory = Path.Combine(driveRoot, TokenDirectory);
         string file = Path.Combine(directory, TokenFilename);
         EnsureSafePaths(directory, file);
@@ -97,6 +96,7 @@ public sealed class UsbKeyManager
             // Distinct random 256-bit secret PER stick; copying the file copies its identity.
             token = TokenCodec.CreateNew();
             Directory.CreateDirectory(directory);
+            EnsureSafePaths(directory, file);
             File.SetAttributes(directory, File.GetAttributes(directory) | FileAttributes.Hidden);
             using (var stream = new FileStream(file, FileMode.CreateNew, FileAccess.Write, FileShare.None))
             {
@@ -130,9 +130,7 @@ public sealed class UsbKeyManager
 
     public void Rename(Guid id, string newName)
     {
-        newName = newName.Trim();
-        if (newName.Length is < 1 or > 64 || newName.Any(char.IsControl))
-            throw new ArgumentException("Naziv mora sadržavati 1–64 znaka bez kontrolnih znakova.");
+        newName = UsbEnrollmentRules.NormalizeName(newName);
         var key = _state.Keys.Single(k => k.Id == id);
         string oldName = key.Name;
         key.Name = newName;

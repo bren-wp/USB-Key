@@ -14,6 +14,7 @@ public sealed class EnrollDialog : Window
     private readonly ComboBox _drives;
     private readonly TextBox _name;
     private readonly TextBlock _status;
+    private readonly Button _register;
 
     public string SelectedDrive => _drives.SelectedItem as string ?? "";
     public string KeyName => _name.Text.Trim();
@@ -104,6 +105,7 @@ public sealed class EnrollDialog : Window
             BorderBrush = new SolidColorBrush(Color.FromRgb(185, 211, 233))
         };
         System.Windows.Automation.AutomationProperties.SetName(_drives, "Odaberi izmjenjivi USB pogon");
+        _drives.SelectionChanged += (_, _) => UpdateRegistrationState();
         driveRow.Children.Add(_drives);
         var refresh = new Button
         {
@@ -137,6 +139,7 @@ public sealed class EnrollDialog : Window
             MaxLength = 64
         };
         System.Windows.Automation.AutomationProperties.SetName(_name, "Jedinstven naziv USB ključa");
+        _name.TextChanged += (_, _) => UpdateRegistrationState();
         fields.Children.Add(_name);
 
         fields.Children.Add(new Border
@@ -179,22 +182,27 @@ public sealed class EnrollDialog : Window
         cancel.Click += (_, _) => DialogResult = false;
         actions.Children.Add(cancel);
 
-        var register = new Button
+        _register = new Button
         {
             Content = "Registriraj USB", Width = 173, IsDefault = true,
+            IsEnabled = false,
             Style = (Style)Application.Current.FindResource("PrimaryButton")
         };
-        register.Click += (_, _) =>
+        _register.Click += (_, _) =>
         {
-            if (string.IsNullOrWhiteSpace(SelectedDrive) || KeyName.Length is < 1 or > 64)
+            try
             {
-                MessageBox.Show(this, "Odaberi USB pogon i naziv od 1 do 64 znaka.",
-                    "Provjera podataka", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
+                UsbEnrollmentRules.RequireDriveRoot(SelectedDrive);
+                UsbEnrollmentRules.NormalizeName(KeyName);
+                DialogResult = true;
             }
-            DialogResult = true;
+            catch (Exception ex) when (ex is ArgumentException or IOException)
+            {
+                MessageBox.Show(this, ex.Message,
+                    "Provjera podataka", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         };
-        actions.Children.Add(register);
+        actions.Children.Add(_register);
         Populate(drives);
     }
 
@@ -203,6 +211,7 @@ public sealed class EnrollDialog : Window
         try { Populate(UsbKeyManager.AvailableDrives()); }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
+            Populate(Array.Empty<string>());
             _status.Text = "Osvježavanje USB popisa nije uspjelo: " + ex.Message;
         }
     }
@@ -220,6 +229,15 @@ public sealed class EnrollDialog : Window
         _status.Text = drives.Count == 0
             ? "Nema spremnih izmjenjivih USB pogona. Umetni stick pa odaberi Osvježi."
             : $"Pronađeni spremni izmjenjivi pogoni: {drives.Count}.";
+        UpdateRegistrationState();
+    }
+
+    private void UpdateRegistrationState()
+    {
+        if (_register is null) return;
+        _register.IsEnabled = UsbEnrollmentRules.IsValidName(KeyName) &&
+            _drives.SelectedItem is string root &&
+            !string.IsNullOrEmpty(root);
     }
 }
 
