@@ -64,4 +64,21 @@ monitor.Reset();
 Check(!monitor.Observe(0, true, true), "Settings change resets monitoring");
 Check(!monitor.Observe(0, false, true), "No lock on an unreadable device after reset");
 
+// Onboarding completion must be independent of USB enrollment and Windows credentials.
+string welcomeFolder = Path.Combine(Path.GetTempPath(), "brendigo-welcome-test-" + Guid.NewGuid().ToString("N"));
+try
+{
+    Check(!OnboardingState.IsCompletedAt(welcomeFolder), "Unseen welcome starts incomplete");
+    OnboardingState.MarkCompletedAt(welcomeFolder);
+    Check(OnboardingState.IsCompletedAt(welcomeFolder), "Finished welcome is remembered without USB registration");
+    OnboardingState.MarkCompletedAt(welcomeFolder);
+    Check(OnboardingState.IsCompletedAt(welcomeFolder), "Finishing twice is safe");
+    File.WriteAllText(Path.Combine(welcomeFolder, "welcome.completed"), "garbage");
+    Check(!OnboardingState.IsCompletedAt(welcomeFolder), "Corrupt non-security welcome marker is rejected");
+}
+finally
+{
+    if (Directory.Exists(welcomeFolder)) Directory.Delete(welcomeFolder, recursive: true);
+}
+
 Console.WriteLine($"All {checks} USB security smoke checks passed.");

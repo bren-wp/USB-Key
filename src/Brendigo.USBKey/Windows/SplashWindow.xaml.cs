@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Brendigo.USBKey.Services;
 
 namespace Brendigo.USBKey.Windows;
 
@@ -55,6 +56,16 @@ public partial class SplashWindow : Window
 
         if (_openDashboard)
         {
+            try { OnboardingState.MarkCompleted(); }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // Welcome status is non-security metadata and must not block
+                // users from their regular Windows session or the dashboard.
+                MessageBox.Show(this,
+                    "Nije moguće spremiti dovršetak vodiča. Može se ponovno prikazati " +
+                    "pri sljedećem pokretanju.\n\n" + ex.Message,
+                    "Brendigo USB Key", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
             var main = new MainWindow();
             Application.Current.MainWindow = main;
             main.Show();

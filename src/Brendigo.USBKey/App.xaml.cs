@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Windows;
 using Brendigo.USBKey.Windows;
+using Brendigo.USBKey.Services;
 
 namespace Brendigo.USBKey;
 
@@ -39,7 +40,7 @@ public partial class App : Application
         bool existingConfiguration = File.Exists(Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "Brendigo", "USBKey", "registry.dat"));
-        if (autoStart || existingConfiguration)
+        if (autoStart || existingConfiguration || OnboardingState.IsCompleted())
         {
             var dashboard = new MainWindow();
             MainWindow = dashboard;
