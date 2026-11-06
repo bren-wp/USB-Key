@@ -5,10 +5,10 @@
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>Brendigo.USBKey</AssemblyName>
+    <AssemblyName>Brendigo-USB-Key-Portable</AssemblyName>
     <RootNamespace>Brendigo.USBKey</RootNamespace>
     <ApplicationIcon>..\..\assets\brendigo-usb-key.ico</ApplicationIcon>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>Brendigo</Authors>
     <Company>Brendigo</Company>
     <Product>Brendigo USB Key</Product>
