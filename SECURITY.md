@@ -12,7 +12,7 @@ U ovoj verziji ne postoji komponenta koja može otključati Windows logon. Ne po
 | Kopirana datoteka na običnom sticku | **Nije zaštićeno**; zahtijeva hardverski izazov-odgovor |
 | Napadač s pristupom otključanoj Windows sesiji | **Nije riješeno**; Windows je granica povjerenja |
 | Čitanje lokalnog registra drugim Windows računom | DPAPI CurrentUser štiti registar |
-| Kratki prekid USB detekcije | Tri uzastopna neuspjela skeniranja prije auto-locka |
+| Kratki prekid USB detekcije | Tri uzastopna **pouzdana skeniranja odsutnosti** prije auto-locka; neuspjela provjera odgađa zaključavanje |
 | Gašenje procesa / restart računala | Auto-lock nije stalno aktivna zaštita |
 | Gubitak svih USB-ova | Windows lozinka/Hello ostaju neizmijenjeni |
 | Gubitak BitLocker ključa | Izvan opsega; BitLocker recovery key mora biti sigurno spremljen |
@@ -25,7 +25,7 @@ Automatsko zaključavanje uključuje se isključivo ručnom potvrdom. Prije akti
 - **tri uzastopne pouzdane provjere** nisu pronašle nijedan registrirani USB;
 - nije zabilježena pogreška enumeracije ili čitanja USB datoteke.
 
-Nepouzdano očitanje poništava odbrojavanje odsutnosti i **ne zaključava Windows**. To smanjuje rizik nenamjernog zaključavanja, ali stvara tradeoff: nepravilno ili namjerno nedostupno USB spremište može odgoditi zaključavanje. Zato ovo nije zaštita od fizičkog ili privilegiranog napadača, nego opcionalna lokalna pogodnost.
+Nepouzdano očitanje poništava odbrojavanje odsutnosti i **ne zaključava Windows**. Isto vrijedi ako je prethodno prepoznati USB pogon još priključen, ali njegova datoteka tokena više nije valjana ili je nedostupna; Dashboard tu situaciju označava kao nepouzdanu provjeru. To smanjuje rizik nenamjernog zaključavanja, ali stvara tradeoff: nepravilno ili namjerno nedostupno USB spremište može odgoditi zaključavanje. Zato ovo nije zaštita od fizičkog ili privilegiranog napadača, nego opcionalna lokalna pogodnost.
 
 Lokalni registar se prije uporabe provjerava na veličinu, valjanost zapisa i duplikate; neispravni podaci se ne resetiraju tiho. Pri čitanju USB tokena postavljen je čvrsti limit i datoteka se ne smije pratiti preko jednostavnih reparse-point preusmjeravanja. Svejedno ostaje TOCTOU rizik i mogućnost kloniranja tokena.
 

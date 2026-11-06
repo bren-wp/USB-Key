@@ -9,7 +9,7 @@ Pregled koda i CI-a: 6. studenoga 2026. Neovisni penetracijski test, formalni au
 | Nevaljano kodiranje USB tokena | Provjera JSON formata i canonical Base64, točno 256 bita |
 | Prevelika datoteka na izmjenjivom disku | Ograničenje parsiranja na 2048 bajtova |
 | Jednostavno preusmjeravanje preko junction/symlink datoteke | Odbijanje reparse-point datoteka i mapa |
-| Kratko nestajanje USB-a | Tri uzastopne odsutne provjere prije zaključavanja |
+| Kratko nestajanje USB-a | Tri uzastopne pouzdane odsutne provjere; nepouzdana provjera odgađa zaključavanje |
 | Pogrešan zapis o uspješnom zaključavanju | Razlikovanje prihvaćenog i odbijenog zahtjeva LockWorkStation |
 | Neograničen sigurnosni dnevnik | Lokalna rotacija na približno 1 MiB |
 | Neuspjeh upisa opcije auto-lock | Vraćanje prethodne vrijednosti u memoriji |
@@ -17,13 +17,21 @@ Pregled koda i CI-a: 6. studenoga 2026. Neovisni penetracijski test, formalni au
 
 ## Trenutačne dodatne provjere
 
-- **30 automatiziranih USB smoke provjera:** format tokena, zasebni slučajni ID, nekanonski Base64, pokvareni tokeni, više USB ključeva i pouzdanost trostruke provjere odsutnosti.
-- **12 WPF vizualnih rendera:** ekran po ekran iz stvarnog XAML-a na Windowsu, uključujući početni zaslon, onboardinge, sve glavne sekcije i dijaloge.
+- **55 automatiziranih USB/sigurnosnih smoke provjera:** format tokena, zasebni slučajni ID, nekanonski Base64, pokvareni tokeni, više USB ključeva i pouzdanost trostruke provjere odsutnosti.
+- **13 WPF zaslona i dodatne tri varijante vizualnog renderiranja:** ekran po ekran iz stvarnog XAML-a na Windowsu, uključujući početni zaslon, onboardinge, sve glavne sekcije i dijaloge.
 - **WPF wiring provjera:** automatsko otkrivanje nepostojećih XAML Click/SelectionChanged/RequestNavigate callbackova i nepostojećih screenshot datoteka.
 - **Pohrana:** lokalni registar odbija nevaljane, duplicirane ili prevelike zapise; USB token se čita uz ograničen broj bajtova.
 - **Sigurnosna pogodnost:** nepravilna enumeracija USB-a ili čitanje tokena ne smiju se zamijeniti pouzdanom odsutnošću ključa.
 
 Ovaj pregled je **ciljan, preliminaran i bez formalne penetracijske provjere**. Nije profesionalni certifikacijski pregled, puni dead-code audit niti dokaz da aplikacija štiti zaključani Windows.
+
+## Zapažanja ove iteracije — 7. studenoga 2026.
+
+- Dodana provjera prethodno viđenog izmjenjivog pogona: ako pogon ostane prisutan, a token se više ne može provjeriti, ne tretira se kao potvrđeno vađenje USB-a.
+- USB registracija prihvaća isključivo jednostavni korijen izmjenjivog diska, a ne podmapu, mrežnu putanju ili putanju relativnu pogonu.
+- Registracijska forma onemogućuje potvrdu bez odabranog pogona i valjanog naziva; ograničen je broj pohranjenih ključeva na 2048.
+- Dashboard prikazuje odgođeni auto-lock i upozorenje za nepouzdano očitanje.
+- Ovo je izvorno-kodni i CI pregled, bez fizičkih uređaja ili neovisnog penetracijskog testiranja. Opseg 55 provjera ne obuhvaća sve rubne slučajeve Windows datotečnog sustava i autentifikacije.
 
 ## Rizici koji i dalje postoje
 

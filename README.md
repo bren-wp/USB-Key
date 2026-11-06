@@ -124,6 +124,8 @@ Kad zatvoriš glavni prozor tipkom **X**, aplikacija ostaje aktivna u **system t
 
 Automatsko zaključavanje zahtijeva tri uzastopne **pouzdane** provjere odsutnosti svih USB ključeva. Ako USB očitanje ne uspije, nadzor neće taj rezultat tretirati kao dokaz uklanjanja uređaja. Ovo je sigurnosna pogodnost, ne zamjena za Windows prijavu.
 
+**Dodatna zaštita:** kada prethodno prepoznati USB još ima priključen pogon, ali token nedostaje ili je neispravan, Dashboard prikazuje upozorenje i odgađa auto-lock. Za upis novog ključa moraš odabrati stvarni korijen izmjenjivog diska; slučajne ili mrežne putanje nisu dopuštene. Ovo smanjuje nenamjerno zaključavanje, ali nije zaštita od napadača s pristupom otključanom Windowsu.
+
 - Svaki stick dobiva zaseban nasumičan token od **256 bita**.
 - Lokalni registar zaštićen je **Windows DPAPI-jem** u kontekstu prijavljenog korisnika.
 - Token na običnom USB sticku **nije zaštićen od kopiranja**.
@@ -147,6 +149,10 @@ Za razvoj: Windows 10/11 i .NET 10 SDK.
 Za self-contained izdanje:
 
     dotnet publish src/Brendigo.USBKey/Brendigo.USBKey.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+
+## Automatska provjera kvalitete
+
+GitHub Actions trenutačno izvodi **55 automatskih smoke provjera** sigurnosne logike (tokeni, više USB ključeva, prijelazi auto-locka, nepouzdana očitanja, valjanost registracijskih polja, onboarding i lokalni logovi). Testni Windows runner renderira **13 stvarnih WPF zaslona** i dodatne varijante kompaktnih prozora i DPI skaliranja. To nije fizički test USB stickova ni certifikat pixel-perfect 1:1.
 
 ## Sljedeće razvojne faze
 

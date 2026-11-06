@@ -20,7 +20,7 @@ Autor i brend: Brendigo · https://brendigo.com · MIT
 - Ponašanje auto-locka dodatno zaštićeno od neuspjelih USB očitanja; samo tri uzastopne pouzdane provjere odsutnosti mogu zatražiti zaključavanje.
 - Uvedena stroža validacija lokalnog DPAPI registra i ograničeno čitanje tokena s izmjenjivog medija.
 - Statusi USB ključeva na nadzornoj ploči prikazuju se zasebno; dodane su kontrole i provjera autostart lokacije.
-- Provjereni WPF callbackovi, 40 sigurnosnih smoke testova i 13 stvarnih CI-renderiranih prikaza aplikacije uz tri varijante manjih prozora i DPI skaliranja.
+- Provjereni WPF callbackovi, 55 sigurnosnih smoke testova i 13 stvarnih CI-renderiranih prikaza aplikacije uz tri varijante manjih prozora i DPI skaliranja.
 
 - Ujednačene WPF pozadine i kontrast gumba te bolje ponašanje Dashboard kartica na manjim prozorima.
 - Security Log omogućuje lokalno pretraživanje, osvježavanje i izvoz uz upozorenje o privatnosti.
@@ -32,7 +32,7 @@ Autor i brend: Brendigo · https://brendigo.com · MIT
 - Security Log čita i posljednju rotiranu arhivu, a izvoz TXT-a uključuje sve trenutačno sačuvane događaje te odbija prepisivanje izvornih logova.
 - Vektorske ikone u bočnoj navigaciji i početnom vodiču te suptilne 3D sjene kartica; dodana provjera oznaka navigacije nakon otkrivene regresije.
 - Ručno osvježavanje nakon greške može ponovno uključiti periodični USB nadzor; nepouzdano očitanje nikada se ne tretira kao potvrđeni gubitak ključa.
-- Dodane regresijske provjere i ukupno 40 USB/sigurnosnih smoke testova.
+- Dodane regresijske provjere i ukupno 55 USB/sigurnosnih smoke testova.
 
 - Dashboard razlikuje nepouzdano USB očitanje od stvarnog uklanjanja i jasno prikazuje odgodu automatskog zaključavanja.
 - Ojačana registracija USB-a: dopušten je isključivo korijen izmjenjivog pogona, a gumb za registraciju nije aktivan bez valjanog naziva i pogona.
