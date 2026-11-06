@@ -66,7 +66,27 @@
       <Setter Property="Background" Value="#FCE8EB"/>
       <Setter Property="Foreground" Value="#A61B31"/>
     </Style>
+    <!-- Stroke-based icons are the same on every Windows machine; no emoji font fallback. -->
+    <Style x:Key="SidebarIcon" TargetType="Path">
+      <Setter Property="Width" Value="17"/>
+      <Setter Property="Height" Value="17"/>
+      <Setter Property="Stretch" Value="Uniform"/>
+      <Setter Property="Stroke" Value="White"/>
+      <Setter Property="StrokeThickness" Value="1.9"/>
+      <Setter Property="StrokeLineJoin" Value="Round"/>
+      <Setter Property="StrokeStartLineCap" Value="Round"/>
+      <Setter Property="StrokeEndLineCap" Value="Round"/>
+      <Setter Property="Margin" Value="0,0,9,0"/>
+    </Style>
+    <Style x:Key="SidebarLabel" TargetType="TextBlock">
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="FontSize" Value="12.5"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="TextWrapping" Value="NoWrap"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+    </Style>
     <Style x:Key="NavButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+      <Setter Property="ContentTemplate" Value="{x:Null}"/>
       <Setter Property="Background" Value="Transparent"/>
       <Setter Property="HorizontalContentAlignment" Value="Left"/>
       <Setter Property="FontSize" Value="13"/>
