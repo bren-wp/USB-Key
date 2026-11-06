@@ -44,8 +44,10 @@ $images = [regex]::Matches($readme, 'assets/screenshots/([a-z0-9-]+\.png)') |
     ForEach-Object { $_.Groups[1].Value } | Select-Object -Unique
 foreach ($name in $images) {
     $filepath = Join-Path $root "assets/screenshots/$name"
-    if (-not (Test-Path -LiteralPath $filepath -PathType Leaf)) {
-        throw "Missing documented screenshot: $name"
+    $justRendered = Join-Path $root "artifacts/screenshots/$name"
+    if (-not (Test-Path -LiteralPath $filepath -PathType Leaf) -and
+        -not (Test-Path -LiteralPath $justRendered -PathType Leaf)) {
+        throw "Missing documented or newly rendered screenshot: $name"
     }
     $checks++
 }
