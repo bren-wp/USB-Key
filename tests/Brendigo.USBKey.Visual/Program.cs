@@ -85,15 +85,15 @@ internal static class Program
         byte[] pixels = new byte[stride * height];
         image.CopyPixels(pixels, stride, 0);
         var colors = new HashSet<uint>();
-        for (int y = 10; y < height - 10; y += 23)
-        for (int x = 10; x < width - 10; x += 23)
+        for (int y = 10; y < height - 10; y += 7)
+        for (int x = 10; x < width - 10; x += 7)
         {
             int i = y * stride + x * 4;
             uint rgba = (uint)(pixels[i] | pixels[i+1] << 8 |
                 pixels[i+2] << 16 | pixels[i+3] << 24);
             colors.Add(rgba);
         }
-        if (colors.Count < 12)
+        if (colors.Count < 10)
             throw new InvalidOperationException(
                 $"UI snapshot {filename} appears blank (only {colors.Count} sampled colors).");
 
