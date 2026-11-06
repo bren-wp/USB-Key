@@ -24,6 +24,7 @@ public sealed class UsbKeyManager
     private readonly string _eventsPath;
     private RegistryState _state;
     private HashSet<Guid> _previouslySeen = new();
+    private readonly Dictionary<Guid, string> _lastVerifiedDriveRoots = new();
     private readonly UsbLockMonitor _lockMonitor = new();
 
     public UsbKeyManager()
@@ -199,6 +200,21 @@ public sealed class UsbKeyManager
         }
 
         var ids = connected.Select(k => k.Id).ToHashSet();
+        // If the physical drive slot is still mounted but a once-recognized key
+        // disappears, treat the scan as uncertain rather than confirming removal.
+        // This also protects against an invalid or deleted key.json on a present USB.
+        uncertain |= UsbScanConfidence.HasUnverifiedKnownDrive(
+            _lastVerifiedDriveRoots, drives, ids);
+        if (enumerationReliable)
+        {
+            var presentRoots = new HashSet<string>(drives, StringComparer.OrdinalIgnoreCase);
+            foreach (var old in _lastVerifiedDriveRoots
+                .Where(k => !presentRoots.Contains(k.Value))
+                .Select(k => k.Key).ToArray())
+                _lastVerifiedDriveRoots.Remove(old);
+        }
+        foreach (var verified in connected)
+            _lastVerifiedDriveRoots[verified.Id] = verified.Drive;
         foreach (var newlySeen in connected.Where(k => !_previouslySeen.Contains(k.Id)))
         {
             var record = _state.Keys.First(k => k.Id == newlySeen.Id);
@@ -224,6 +240,7 @@ public sealed class UsbKeyManager
     {
         _lockMonitor.Reset();
         _previouslySeen.Clear();
+        _lastVerifiedDriveRoots.Clear();
     }
 
     public void LockNow()

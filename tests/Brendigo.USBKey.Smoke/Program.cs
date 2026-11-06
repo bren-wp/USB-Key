@@ -116,4 +116,36 @@ finally
     Directory.Delete(logFolder, recursive: true);
 }
 
+
+// A previously recognized physical drive must not trigger auto-lock while
+// it is still mounted if its token file is missing, corrupt or replaced.
+var knownRoots = new Dictionary<Guid, string> {
+    [first.Id] = "X:\\",
+    [second.Id] = "Y:\\"
+};
+Check(!UsbScanConfidence.HasUnverifiedKnownDrive(knownRoots,
+    new[] { "X:\\", "Y:\\" }, new[] { first.Id, second.Id }),
+    "Both verified USB drives are reliable");
+Check(UsbScanConfidence.HasUnverifiedKnownDrive(knownRoots,
+    new[] { "X:\\", "Y:\\" }, new[] { second.Id }),
+    "A known mounted USB with unreadable token is uncertain");
+Check(!UsbScanConfidence.HasUnverifiedKnownDrive(knownRoots,
+    new[] { "Y:\\" }, new[] { second.Id }),
+    "Actually removed USB root is reliable absence");
+Check(UsbScanConfidence.HasUnverifiedKnownDrive(knownRoots,
+    new[] { "x:\\", "y:\\" }, new[] { second.Id }),
+    "Known drive comparisons are case insensitive");
+Check(!UsbScanConfidence.HasUnverifiedKnownDrive(knownRoots,
+    Array.Empty<string>(), Array.Empty<Guid>()),
+    "Absence of all previously mounted USB roots is not an I/O error");
+Check(UsbScanConfidence.HasUnverifiedKnownDrive(knownRoots,
+    new[] { "X:\\", "Y:\\" }, Array.Empty<Guid>()),
+    "No verified USB but known mounted roots is uncertain");
+var stayConnected = new UsbLockMonitor();
+stayConnected.Observe(1, scanReliable: true, enabled: true);
+Check(!stayConnected.Observe(0, scanReliable: false, enabled: true),
+    "Unverifiable mounted USB does not auto-lock");
+Check(!stayConnected.Observe(0, scanReliable: true, enabled: true),
+    "After an uncertain scan a fresh reliable absence count begins");
+
 Console.WriteLine($"All {checks} USB security smoke checks passed.");
