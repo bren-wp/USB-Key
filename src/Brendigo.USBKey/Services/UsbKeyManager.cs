@@ -256,7 +256,7 @@ public sealed class UsbKeyManager
                 if (key is null || key.Id == Guid.Empty || !ids.Add(key.Id) ||
                     string.IsNullOrWhiteSpace(key.Name) || key.Name.Length > 64 ||
                     key.Name.Any(char.IsControl) || key.ProofHex is null ||
-                    key.ProofHex.Length != 64 || !Convert.IsHexString(key.ProofHex))
+                    key.ProofHex.Length != 64 || !key.ProofHex.All(static c => char.IsAsciiHexDigit(c)))
                     throw new InvalidDataException(
                         "USB registar sadrži oštećeni ili duplicirani zapis. Podaci nisu automatski zamijenjeni.");
             }
