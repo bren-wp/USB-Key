@@ -25,8 +25,11 @@ public static class StartupService
 
         string executable = Environment.ProcessPath
             ?? throw new InvalidOperationException("Nije moguće utvrditi lokaciju aplikacije.");
-        if (!string.Equals(Path.GetFileName(executable), "Brendigo.USBKey.exe",
-            StringComparison.OrdinalIgnoreCase))
+        string fileName = Path.GetFileName(executable);
+        bool supportedName = string.Equals(fileName, "Brendigo-USB-Key-Portable.exe",
+            StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(fileName, "Brendigo.USBKey.exe", StringComparison.OrdinalIgnoreCase);
+        if (!supportedName)
             throw new InvalidOperationException(
                 "Automatsko pokretanje omogućite tek u objavljenoj Windows aplikaciji.");
         using var run = Registry.CurrentUser.CreateSubKey(RunKey);
