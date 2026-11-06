@@ -51,6 +51,8 @@ public sealed class UsbKeyManager
 
     public IReadOnlyList<KeyRecord> Registered => _state.Keys.AsReadOnly();
     public string EventsPath => _eventsPath;
+    /// <summary>False when any removable drive or previously trusted token could not be verified.</summary>
+    public bool LastScanReliable { get; private set; } = true;
 
     public static IReadOnlyList<string> AvailableDrives() => EnumerateDrives(out _);
 
@@ -222,9 +224,10 @@ public sealed class UsbKeyManager
         }
         _previouslySeen = ids;
 
-        // Only three consecutive *reliable* scans with no registered USB may lock.
-        // Any enumeration/read error resets the absence countdown (fail-open).
-        if (_lockMonitor.Observe(connected.Count, scanReliable: !uncertain, enabled: _state.AutoLock))
+        // Surface the same uncertainty to the UI instead of reporting a misleading
+        // absence. Unknown results reset the auto-lock countdown (fail open).
+        LastScanReliable = !uncertain;
+        if (_lockMonitor.Observe(connected.Count, scanReliable: LastScanReliable, enabled: _state.AutoLock))
         {
             bool accepted = LockWorkStation();
             WriteEvent(accepted

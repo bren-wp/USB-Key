@@ -46,3 +46,7 @@ GitHub Release mora sadržavati Portable.exe, Windows ZIP, USB Setup Kit i SHA25
 GitHub Actions izvodi WPF Release build, smoke testove USB tokena i generira nepotpisani Portable EXE, ZIP, USB setup kit i SHA-256 sume; na main grani pokušava objaviti GitHub prerelease. Automatski build nije zamjena za testiranje na fizičkom Windows računalu ili neovisnu sigurnosnu provjeru.
 
 **Ne testiraj automatsko zaključavanje ako nisi provjerio da znaš Windows lozinku ili Hello.** BitLocker oporavak je odvojen.
+
+## Prikaz nesigurnog očitanja USB-a
+
+Ako prethodno prepoznat USB ostaje priključen, ali mu nedostaje ili je oštećena datoteka tokena, nadzor ne smije zaključiti da je stick izvađen. Dashboard mora prikazati upozorenje o nepouzdanoj provjeri i odgodi automatskog zaključavanja. Nakon oporavka USB tokena treba ponoviti detekciju. Ovaj scenarij zahtijeva i fizički test na Windowsu; automatski smoke test provjerava samo logiku prepoznavanja takve situacije.

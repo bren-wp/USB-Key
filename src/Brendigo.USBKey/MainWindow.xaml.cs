@@ -211,12 +211,21 @@ public partial class MainWindow : Window
                 _ => $"Registriranih USB ključeva: {rows.Count}. Čuvaj rezervni stick na odvojenoj lokaciji."
             };
             ConnectedCount.Text = connected.Count.ToString();
-            AutoLockState.Text = _manager.AutoLock ? "Uključeno" : "Isključeno";
-            StatusMessage.Text = connected.Count > 0
-                ? "Prepoznati USB ključevi: " + string.Join(", ", connected.Select(k => k.Name))
-                : rows.Count > 0
-                    ? "Nijedan registrirani USB ključ trenutačno nije spojen."
-                    : "Još nema registriranih ključeva. Za početak umetni USB stick.";
+            AutoLockState.Text = _manager.AutoLock
+                ? _manager.LastScanReliable ? "Uključeno" : "Provjera odgođena"
+                : "Isključeno";
+            StatusMessage.Foreground = new SolidColorBrush(
+                _manager.LastScanReliable
+                    ? Color.FromRgb(89, 115, 146) : Color.FromRgb(145, 90, 25));
+            StatusMessage.Text = !_manager.LastScanReliable
+                ? "Provjera barem jednog USB pogona nije pouzdana. " +
+                  "Automatsko zaključavanje neće se pokrenuti na temelju tog očitanja. " +
+                  "Provjeri USB priključak i osvježi status."
+                : connected.Count > 0
+                    ? "Prepoznati USB ključevi: " + string.Join(", ", connected.Select(k => k.Name))
+                    : rows.Count > 0
+                        ? "Nijedan registrirani USB ključ trenutačno nije spojen."
+                        : "Još nema registriranih ključeva. Za početak umetni USB stick.";
             if (_page == "Security") RefreshSecurityLog();
             // A manual refresh after an error also resumes the regular monitoring
             // timer; an error must not disable the service forever until a restart.

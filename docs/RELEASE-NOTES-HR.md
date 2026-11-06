@@ -34,6 +34,10 @@ Autor i brend: Brendigo · https://brendigo.com · MIT
 - Ručno osvježavanje nakon greške može ponovno uključiti periodični USB nadzor; nepouzdano očitanje nikada se ne tretira kao potvrđeni gubitak ključa.
 - Dodane regresijske provjere i ukupno 40 USB/sigurnosnih smoke testova.
 
+- Dashboard razlikuje nepouzdano USB očitanje od stvarnog uklanjanja i jasno prikazuje odgodu automatskog zaključavanja.
+- Ojačana registracija USB-a: dopušten je isključivo korijen izmjenjivog pogona, a gumb za registraciju nije aktivan bez valjanog naziva i pogona.
+- Osam novih regresijskih provjera za neprovjerljiv prethodno poznat USB i sedam provjera pravila registracije.
+
 ## Važno: ograničenja alfa verzije
 
 **USB ne otključava Windows zaslon za prijavu.** Program podržava registraciju, detekciju i opcionalno zaključavanje već otvorene sesije. Windows lozinka/Hello ostaju rezervni način prijave. Obični USB token moguće je kopirati. FIDO2 i Credential Provider nisu implementirani.
