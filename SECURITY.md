@@ -17,6 +17,18 @@ U ovoj verziji ne postoji komponenta koja može otključati Windows logon. Ne po
 | Gubitak svih USB-ova | Windows lozinka/Hello ostaju neizmijenjeni |
 | Gubitak BitLocker ključa | Izvan opsega; BitLocker recovery key mora biti sigurno spremljen |
 
+### Nadzor i namjerno sigurnije ponašanje pri pogreškama
+
+Automatsko zaključavanje uključuje se isključivo ručnom potvrdom. Prije aktiviranja zahtjeva za zaključavanje moraju biti ispunjeni uvjeti:
+
+- aplikacija radi i prethodno je u istoj sesiji prepoznala barem jedan registrirani ključ;
+- **tri uzastopne pouzdane provjere** nisu pronašle nijedan registrirani USB;
+- nije zabilježena pogreška enumeracije ili čitanja USB datoteke.
+
+Nepouzdano očitanje poništava odbrojavanje odsutnosti i **ne zaključava Windows**. To smanjuje rizik nenamjernog zaključavanja, ali stvara tradeoff: nepravilno ili namjerno nedostupno USB spremište može odgoditi zaključavanje. Zato ovo nije zaštita od fizičkog ili privilegiranog napadača, nego opcionalna lokalna pogodnost.
+
+Lokalni registar se prije uporabe provjerava na veličinu, valjanost zapisa i duplikate; neispravni podaci se ne resetiraju tiho. Pri čitanju USB tokena postavljen je čvrsti limit i datoteka se ne smije pratiti preko jednostavnih reparse-point preusmjeravanja. Svejedno ostaje TOCTOU rizik i mogućnost kloniranja tokena.
+
 ### Lokalni materijal
 
 - USB: .brendigo-usb-key/key.json sa zasebnim 32-bajtnim nasumičnim tokenom po uređaju.

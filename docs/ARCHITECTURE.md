@@ -20,6 +20,12 @@ Datoteka na USB-u ne izvršava se automatski. Program ne zahtijeva administrator
 
 Svake tri sekunde pregledavaju se spremni izmjenjivi pogoni. Ako se barem jedan valjani ključ pojavi, nadzor se naoružava. Kada nema nijednog valjanog USB-a u tri uzastopna skeniranja i auto-lock je omogućen, poziva se LockWorkStation(). Windows zadržava standardne metode prijave.
 
+## Izolirani vizualni testovi i distribucija
+
+Posebni WPF vizualni runner na Windows CI-u mjeri i renderira 12 pravih sadržaja zaslona pomoću WPF RenderTargetBitmap. Snimke se provjeravaju i spremaju u assets/screenshots, a korisniku se nude kroz marketinški README i portable paket. To nije zamjena za ručno testiranje stvarnih dijaloga na Windows monitoru.
+
+Windows izdanje sadrži samostalni Portable.exe, ZIP s aplikacijom, USB Setup Kit (Portable.exe, HR/EN vodiči, opcionalna skripta za kopiranje) i SHA-256 sume. Skripta ne generira USB tokene niti otključava Windows.
+
 ## Planirane faze
 
 1. Automatizirani jedinični i integracijski testovi uz fizički USB; CI i oporavak oštećenih podataka.

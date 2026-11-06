@@ -17,6 +17,11 @@ Autor i brend: Brendigo · https://brendigo.com · MIT
 - Portable EXE, ZIP s programom i vodičima te USB Setup Kit koji sadrži Portable.exe, HR/EN dokumentaciju i opcionalnu Install-To-USB.ps1 skriptu s provjerom izmjenjivog pogona i SHA-256 kopije.
 - 12 automatizirano provjerenih stvarnih WPF snimki zaslona u README-u i u ZIP paketu.
 
+- Ponašanje auto-locka dodatno zaštićeno od neuspjelih USB očitanja; samo tri uzastopne pouzdane provjere odsutnosti mogu zatražiti zaključavanje.
+- Uvedena stroža validacija lokalnog DPAPI registra i ograničeno čitanje tokena s izmjenjivog medija.
+- Statusi USB ključeva na nadzornoj ploči prikazuju se zasebno; dodane su kontrole i provjera autostart lokacije.
+- Provjereni WPF callbackovi, 30 sigurnosnih smoke testova i 12 stvarnih CI-renderiranih prikaza aplikacije.
+
 ## Važno: ograničenja alfa verzije
 
 **USB ne otključava Windows zaslon za prijavu.** Program podržava registraciju, detekciju i opcionalno zaključavanje već otvorene sesije. Windows lozinka/Hello ostaju rezervni način prijave. Obični USB token moguće je kopirati. FIDO2 i Credential Provider nisu implementirani.

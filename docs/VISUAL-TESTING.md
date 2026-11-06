@@ -6,6 +6,21 @@ Screens captured: Splash/Welcome, onboarding recovery/USB/final step, dashboard,
 
 The renderer measures/arranges each real visual tree and creates PNGs via WPF RenderTargetBitmap. Basic checks reject all-blank images. It does not verify DPI scaling, native title bars, mouse interactions, screen readers, USB hardware or exact similarity to unavailable reference screenshots.
 
+The following 12 captures are stored in assets/screenshots and embedded in the README after passing on Windows CI:
+
+- splash-welcome.png
+- onboarding-recovery.png
+- onboarding-usb.png
+- onboarding-finish.png
+- dashboard.png
+- usb-keys.png
+- backup-access.png
+- security-log.png
+- settings.png
+- about.png
+- register-usb.png
+- rename-usb.png
+
 The repository README should show these images **only after the CI job confirms they exist and they have been committed to assets/screenshots/**. Concept mockups retain explicit "concept" labels.
 
 To render locally on Windows:

@@ -15,6 +15,16 @@ Pregled koda i CI-a: 6. studenoga 2026. Neovisni penetracijski test, formalni au
 | Neuspjeh upisa opcije auto-lock | Vraćanje prethodne vrijednosti u memoriji |
 | Pogreške formata tokena | Automatizirani deterministički smoke testovi u CI-u |
 
+## Trenutačne dodatne provjere
+
+- **30 automatiziranih USB smoke provjera:** format tokena, zasebni slučajni ID, nekanonski Base64, pokvareni tokeni, više USB ključeva i pouzdanost trostruke provjere odsutnosti.
+- **12 WPF vizualnih rendera:** ekran po ekran iz stvarnog XAML-a na Windowsu, uključujući početni zaslon, onboardinge, sve glavne sekcije i dijaloge.
+- **WPF wiring provjera:** automatsko otkrivanje nepostojećih XAML Click/SelectionChanged/RequestNavigate callbackova i nepostojećih screenshot datoteka.
+- **Pohrana:** lokalni registar odbija nevaljane, duplicirane ili prevelike zapise; USB token se čita uz ograničen broj bajtova.
+- **Sigurnosna pogodnost:** nepravilna enumeracija USB-a ili čitanje tokena ne smiju se zamijeniti pouzdanom odsutnošću ključa.
+
+Ovaj pregled je **ciljan, preliminaran i bez formalne penetracijske provjere**. Nije profesionalni certifikacijski pregled, puni dead-code audit niti dokaz da aplikacija štiti zaključani Windows.
+
 ## Rizici koji i dalje postoje
 
 1. **Visok:** datoteka na običnom USB-u može se kopirati, stoga nije kriptografski neklonabilna.

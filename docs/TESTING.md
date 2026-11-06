@@ -33,6 +33,16 @@
 
 ## Automatizacija
 
+GitHub Actions na Windowsu provjerava .NET 10 WPF Release build, **30 USB sigurnosnih smoke provjera**, događaje vezane uz XAML, autorske metapodatke i postojanje 12 stvarnih WPF snimki. Vizualni test renderira stvarne WPF kontrole, provjerava da PNG-ovi nisu prazni te ih izvozi u GitHub artefakte i, kada je dopušteno, u repozitorij.
+
+Ovi testovi **ne potvrđuju** da je UI pixel-perfect 1:1 s dizajnerskim referencama, ne provjeravaju Windows naslovnu traku ili stvarni DPI monitora i ne zamjenjuju ručne hardverske provjere. USB Setup Kit uključuje Portable.exe i opcionalnu skriptu koja kopira datoteke na potvrđeni izmjenjivi pogon, bez stvaranja tokena ili promjene prijave.
+
+### Brza provjera dostupnih izdanja
+
+GitHub Release mora sadržavati Portable.exe, Windows ZIP, USB Setup Kit i SHA256SUMS.txt. Priloženi ZIP-ovi nisu digitalno potpisani i služe samo za testiranje. Provjeru izvršavaj na posljednjem uspješnom Windows buildu i jasno navedi konkretan tag i commit.
+
+
+
 GitHub Actions izvodi WPF Release build, smoke testove USB tokena i generira nepotpisani Portable EXE, ZIP, USB setup kit i SHA-256 sume; na main grani pokušava objaviti GitHub prerelease. Automatski build nije zamjena za testiranje na fizičkom Windows računalu ili neovisnu sigurnosnu provjeru.
 
 **Ne testiraj automatsko zaključavanje ako nisi provjerio da znaš Windows lozinku ili Hello.** BitLocker oporavak je odvojen.
