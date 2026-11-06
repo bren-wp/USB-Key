@@ -15,12 +15,8 @@
       <DockPanel Margin="16,26,16,18" LastChildFill="True">
         <StackPanel DockPanel.Dock="Top">
           <StackPanel Orientation="Horizontal" Margin="9,0,0,40">
-            <Grid Width="52" Height="58" Margin="0,0,11,0">
-              <Path Data="M 26,3 L 47,13 L 44,34 C 41,44 33,50 26,54 C 18,50 10,44 8,34 L 5,13 Z"
-                    Fill="#0F6BFF" Stroke="#65DEDA" StrokeThickness="2"/>
-              <TextBlock Text="USB" FontWeight="Bold" FontSize="12" Foreground="White"
-                         HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            </Grid>
+            <Image Source="/Assets/brendigo-usb-key.ico" Width="52" Height="58" Stretch="Uniform"
+                   Margin="0,0,11,0" AutomationProperties.Name="Brendigo USB Key ikona"/>
             <StackPanel VerticalAlignment="Center">
               <TextBlock Text="Brendigo" Foreground="White" FontWeight="Bold" FontSize="23"/>
               <TextBlock Text="USB Key" Foreground="#62E5D9" FontWeight="SemiBold" FontSize="21"/>
@@ -45,7 +41,7 @@
           <Border Background="#194675" CornerRadius="12" Padding="12">
             <StackPanel>
               <TextBlock Text="BRENDIGO USB KEY" FontWeight="Bold" FontSize="11" Foreground="#64DFD5"/>
-              <TextBlock Text="v0.1.0 · Windows" Foreground="White" Margin="0,6,0,0"/>
+              <TextBlock Text="v0.2.0 · Windows" Foreground="White" Margin="0,6,0,0"/>
               <TextBlock Text="Brendigo · brendigo.com" FontSize="11" Foreground="#BCD4EC"
                          Margin="0,4,0,0"/>
             </StackPanel>
@@ -135,7 +131,7 @@
                         Click="Enroll_Click" Margin="0,0,0,10"/>
                 <Button Content="⟳  Osvježi status" Style="{StaticResource SecondaryButton}"
                         Click="ManualRefresh_Click" Margin="0,0,0,10"/>
-                <Button Content="🔒  Zaključaj Windows" Style="{StaticResource SecondaryButton}"
+                <Button Content="Zaključaj Windows" Style="{StaticResource SecondaryButton}"
                         Click="LockNow_Click"/>
               </StackPanel>
             </Border>
@@ -243,8 +239,11 @@
           <Border Style="{StaticResource Card}">
             <StackPanel>
               <TextBlock Text="Brendigo USB Key" FontWeight="Bold" FontSize="28"/>
-              <TextBlock Text="Verzija 0.1.0 — početna razvojna inačica" Foreground="#597392"
+              <TextBlock Text="Verzija 0.2.0 — testna Windows inačica" Foreground="#597392"
                          Margin="0,5,0,15"/>
+              <Button Content="Otvori uvodni vodič" Click="ShowWelcome_Click"
+                      Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left"
+                      Margin="0,0,0,17"/>
               <TextBlock Text="Autor: Brendigo" Margin="0,0,0,4"/>
               <TextBlock Text="Web: https://brendigo.com" Margin="0,0,0,14"/>
               <TextBlock TextWrapping="Wrap"
