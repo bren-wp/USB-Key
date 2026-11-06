@@ -38,17 +38,46 @@ Brendigo USB Key aplikacija je za Windows koja omogućuje registraciju nekoliko 
 | 🔐 FIDO2 / hardverski challenge-response | ⏳ Nije implementirano |
 | 🖊️ Potpisani Windows instalacijski program | ⏳ Nije implementirano |
 
-## Brendigo sučelje
+## Stvarni prikazi aplikacije
 
-<div align="center">
+Ove PNG snimke nastale su **iz stvarnih WPF/XAML kontrola** automatskim renderiranjem na Windows CI računalu. Nisu AI koncepti ni zamjenske ilustracije. Prikazuju sadržaj programa bez Windowsove naslovne trake. **Ne dokazuju još pixel-perfect 1:1 podudaranje** s referencama na fizičkim zaslonima, a nisu test interakcija na stvarnim USB uređajima.
 
-<img src="assets/marketing/dashboard-concept.svg" alt="Brendigo USB Key, koncept nadzorne ploče" width="95%">
+### Welcome i nadzorna ploča
 
-**Dizajnerski koncept — nije stvarna snimka pokrenute aplikacije.** Stvarne snimke ekrana dodaju se nakon vizualne provjere Windows builda.
+| Splash / Welcome | Dashboard |
+|:---:|:---:|
+| <img src="assets/screenshots/splash-welcome.png" alt="Stvarni WPF prikaz Brendigo USB Key početnog zaslona" width="480"> | <img src="assets/screenshots/dashboard.png" alt="Stvarni WPF prikaz Brendigo USB Key nadzorne ploče" width="480"> |
 
-</div>
+### Svaki zaslon — provjeren WPF prikaz
 
-Vizualni identitet koristi tamnoplavu **#0B2D5C**, plavu **#0F6BFF** i tirkiznu **#14B8A6** boju, Segoe UI te lokalne ikonice: [SVG logotip](assets/brendigo-usb-key.svg) i [Windows ICO](assets/brendigo-usb-key.ico).
+<details>
+<summary><strong>Otvori galeriju svih 12 zaslona i dijaloga</strong></summary>
+
+| USB Keys | Registracija USB-a |
+|:---:|:---:|
+| <img src="assets/screenshots/usb-keys.png" width="480" alt="USB ključevi"> | <img src="assets/screenshots/register-usb.png" width="480" alt="Registracija novog USB-a"> |
+
+| Rezervni pristup | Sigurnosni dnevnik |
+|:---:|:---:|
+| <img src="assets/screenshots/backup-access.png" width="480" alt="Rezervni pristup Windowsu"> | <img src="assets/screenshots/security-log.png" width="480" alt="Sigurnosni dnevnik"> |
+
+| Postavke | O programu |
+|:---:|:---:|
+| <img src="assets/screenshots/settings.png" width="480" alt="Postavke"> | <img src="assets/screenshots/about.png" width="480" alt="O programu"> |
+
+| Onboarding: pristup | Onboarding: USB |
+|:---:|:---:|
+| <img src="assets/screenshots/onboarding-recovery.png" width="480" alt="Vodič za rezervni pristup"> | <img src="assets/screenshots/onboarding-usb.png" width="480" alt="Vodič za registraciju USB-a"> |
+
+| Onboarding: završetak | Preimenovanje USB-a |
+|:---:|:---:|
+| <img src="assets/screenshots/onboarding-finish.png" width="480" alt="Završetak vodiča"> | <img src="assets/screenshots/rename-usb.png" width="480" alt="Dijalog za preimenovanje USB-a"> |
+
+</details>
+
+Brendigo vizualni sustav koristi tamnoplavu **#0B2D5C**, plavu **#0F6BFF** i tirkiznu **#14B8A6** boju, Segoe UI i lokalne ikone: [SVG logotip](assets/brendigo-usb-key.svg) i [Windows ICO](assets/brendigo-usb-key.ico).
+
+[Metodologija WPF snimanja i ograničenja testa](docs/VISUAL-TESTING.md)
 
 ## Preuzimanje i testiranje
 
