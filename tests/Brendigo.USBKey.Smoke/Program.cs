@@ -171,4 +171,54 @@ Check(!UsbEnrollmentRules.IsValidName(" \r\n "),
 Check(!UsbEnrollmentRules.IsValidName(new string('x', 65)),
     "Overlong USB key display names cannot be submitted");
 
+
+// Local management password does not change Windows sign-in or USB tokens.
+string accessFolder = Path.Combine(Path.GetTempPath(), "brendigo-access-test-" + Guid.NewGuid().ToString("N"));
+try
+{
+    var access = new AppPasswordService(accessFolder);
+    const string firstPrivate = "Long-Private-Brendigo-Passphrase-2026!";
+    const string changedPrivate = "New-Private-Brendigo-Passphrase-2026!";
+    Check(!access.IsConfigured, "Fresh application has no configured management password");
+    Check(AppPasswordService.InitialPassword == "Brendigo", "One-time bootstrap is Brendigo");
+    Check(AppPasswordService.ValidateNew("Brendigo") != null,
+        "Public bootstrap cannot be used as permanent password");
+    Check(AppPasswordService.ValidateNew("short") != null, "Short password is rejected");
+    Check(AppPasswordService.ValidateNew(firstPrivate) == null,
+        "Valid private passphrase is accepted");
+
+    bool invalidBootstrap = false;
+    try { access.Initialize("wrong", firstPrivate); }
+    catch (UnauthorizedAccessException) { invalidBootstrap = true; }
+    Check(invalidBootstrap && !access.IsConfigured,
+        "Incorrect initial password cannot configure management");
+    access.Initialize("Brendigo", firstPrivate);
+    Check(access.IsConfigured, "Valid bootstrap creates protected credentials");
+    Check(access.Verify(firstPrivate), "Private password grants management access");
+    Check(!access.Verify("Brendigo"), "Default password no longer unlocks management");
+    var restarted = new AppPasswordService(accessFolder);
+    Check(restarted.Verify(firstPrivate), "DPAPI credentials persist across restarts");
+    bool blockedReinitialize = false;
+    try { restarted.Initialize("Brendigo", changedPrivate); }
+    catch (InvalidOperationException) { blockedReinitialize = true; }
+    Check(blockedReinitialize, "Existing password cannot be overwritten with bootstrap");
+
+    bool blockedChange = false;
+    try { restarted.Change("wrong", changedPrivate); }
+    catch (UnauthorizedAccessException) { blockedChange = true; }
+    Check(blockedChange, "Changing a password requires the existing private password");
+    restarted.Change(firstPrivate, changedPrivate);
+    Check(!restarted.Verify(firstPrivate), "Old password is rejected after change");
+    Check(restarted.Verify(changedPrivate), "New password works after change");
+    for (int i = 0; i < 5; i++) restarted.Verify("incorrect");
+    Check(restarted.RemainingLockout > TimeSpan.Zero,
+        "Repeated failures temporarily pause unlock attempts");
+    Check(!restarted.Verify(changedPrivate),
+        "A correct password cannot bypass a current lockout");
+}
+finally
+{
+    if (Directory.Exists(accessFolder)) Directory.Delete(accessFolder, recursive: true);
+}
+
 Console.WriteLine($"All {checks} USB security smoke checks passed.");
