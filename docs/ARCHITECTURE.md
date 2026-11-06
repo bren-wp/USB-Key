@@ -1,21 +1,23 @@
 # Arhitektura
 
-## Verzija 0.1
+## Verzija 0.2
 
 USB #1, USB #2, USB #3 → Brendigo WPF aplikacija → UsbKeyManager.
 
 UsbKeyManager provjerava lokalni registar enkriptiran DPAPI-jem. Opcionalno poziva LockWorkStation za zaključavanje *već otvorene* Windows sesije.
 
+- **SplashWindow**: četiri uvodna koraka i sigurnosno objašnjenje, bez izmjene Windows prijave.
 - **MainWindow**: WPF upravljanje, prikaz i opcije.
+- **TokenCodec**: zaseban strogo validiran format nasumičnog USB tokena i SHA-256 dokaza.
 - **UsbKeyManager**: tokeni po sticku, SHA-256 dokaz, lokalni popis povjerenja, praćenje, opoziv, zapisnik i opcionalno zaključavanje.
-- **StartupService**: HKCU Run za pokretanje nakon prijave u Windows.
+- **StartupService**: HKCU Run uz argument --autostart, koji preskače uvod i odmah uključuje nadzor nakon Windows prijave.
 - **EnrollDialog**: odabir izmjenjivog USB pogona i naziva.
 
 Datoteka na USB-u ne izvršava se automatski. Program ne zahtijeva administratorske ovlasti.
 
 ## Praćenje automatskog zaključavanja
 
-Svake tri sekunde pregledavaju se spremni izmjenjivi pogoni. Ako se barem jedan valjani ključ pojavi, nadzor se naoružava. Kada nema nijednog valjanog USB-a u dva uzastopna skeniranja i auto-lock je omogućen, poziva se LockWorkStation(). Windows zadržava standardne metode prijave.
+Svake tri sekunde pregledavaju se spremni izmjenjivi pogoni. Ako se barem jedan valjani ključ pojavi, nadzor se naoružava. Kada nema nijednog valjanog USB-a u tri uzastopna skeniranja i auto-lock je omogućen, poziva se LockWorkStation(). Windows zadržava standardne metode prijave.
 
 ## Planirane faze
 

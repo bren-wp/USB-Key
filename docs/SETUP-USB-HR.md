@@ -1,11 +1,11 @@
 
 # Brendigo USB Key — upute za tri i više USB stickova
 
-**Razvojna verzija 0.1.0:** Ovaj program **ne otključava Windowsovu prijavu**. Podržava lokalnu USB registraciju i opcionalno zaključavanje već otvorene Windows sesije.
+**Razvojna verzija 0.2.0:** Ovaj program **ne otključava Windowsovu prijavu**. Podržava lokalnu USB registraciju i opcionalno zaključavanje već otvorene Windows sesije.
 
 ## Prije početka
 
-Pripremi računalo s Windowsom 10/11, provjerenu Windows lozinku ili Windows Hello PIN te najmanje dva zasebna USB sticka. Ako koristiš BitLocker, prethodno spremi ključ za oporavak diska izvan računala. Preuzmi nepotpisanu testnu ZIP datoteku na [GitHub Actions](https://github.com/bren-wp/USB-Key/actions/workflows/windows-build.yml) i raspakiraj je.
+Pripremi računalo s Windowsom 10/11, provjerenu Windows lozinku ili Windows Hello PIN te najmanje dva zasebna USB sticka. Ako koristiš BitLocker, prethodno spremi ključ za oporavak diska izvan računala. Preuzmi nepotpisanu testnu aplikaciju i USB setup kit s [GitHub Releases](https://github.com/bren-wp/USB-Key/releases); ZIP raspakiraj prije pokretanja.
 
 ## Registracija
 
@@ -39,7 +39,7 @@ Opoziv na računalu ne briše automatski datoteku na sticku. BitLocker recovery 
 - **USB nije na popisu:** Provjeri prikazuje li ga Windows kao spreman *Removable* pogon, je li podržan i može li se na njega pisati. Neki vanjski diskovi označeni su kao *Fixed* i možda se neće prikazati.
 - **USB nije prepoznat kao registriran:** Provjeri datoteku ključa, pokušaj drugi USB priključak i nemoj kopirati tuđi token.
 - **Aplikacija nije pokrenuta:** Auto-lock i detekcija u ovoj verziji neće raditi kao stalni sustavski servis.
-- **Zaključavanje radi, a USB ne otključava Windows:** To je očekivano u verziji 0.1.0. Koristi Windows lozinku/Hello.
+- **Zaključavanje radi, a USB ne otključava Windows:** To je očekivano u verziji 0.2.0. Koristi Windows lozinku/Hello.
 
 ## Preporučena testna konfiguracija
 

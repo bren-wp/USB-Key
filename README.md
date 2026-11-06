@@ -9,12 +9,12 @@
 
 Windows 10 / 11 · C# / .NET 10 / WPF · Portable testna verzija · Lokalna obrada · MIT
 
-[Preuzmi testnu verziju](https://github.com/bren-wp/USB-Key/actions/workflows/windows-build.yml) · [Kako pripremiti USB](docs/SETUP-USB-HR.md) · [Sigurnosni model](SECURITY.md) · [Prijavi problem](https://github.com/bren-wp/USB-Key/issues)
+[Preuzmi testnu verziju](https://github.com/bren-wp/USB-Key/releases) · [Kako pripremiti USB](docs/SETUP-USB-HR.md) · [Sigurnosni model](SECURITY.md) · [Prijavi problem](https://github.com/bren-wp/USB-Key/issues)
 
 </div>
 
 > [!IMPORTANT]
-> **Razvojna alfa 0.1.0.** Trenutačni program registrira i provjerava USB stickove te opcionalno zaključava već otvorenu Windows sesiju. **Umetanje USB sticka još NE otključava zaključani Windows zaslon.** Windows lozinka ili Hello ostaju nepromijenjeni. Ovo nije sigurnosno revidirano produkcijsko izdanje.
+> **Razvojna alfa 0.2.0.** Trenutačni program registrira i provjerava USB stickove te opcionalno zaključava već otvorenu Windows sesiju. **Umetanje USB sticka još NE otključava zaključani Windows zaslon.** Windows lozinka ili Hello ostaju nepromijenjeni. Ovo nije sigurnosno revidirano produkcijsko izdanje.
 
 ## Lokalna USB sigurnost, pod tvojom kontrolom
 
@@ -27,13 +27,13 @@ Brendigo USB Key aplikacija je za Windows koja omogućuje registraciju nekoliko 
 | Značajka | Stanje |
 | :--- | :--- |
 | 🔑 Više USB stickova s različitim tokenima | ✅ Implementirano |
-| 🖥️ Brendigo Windows sučelje | ✅ Početna WPF verzija |
+| 🖥️ Brendigo Windows sučelje | ✅ WPF nadzorna ploča i uvodni vodič |
 | 🔒 Zaključavanje nakon uklanjanja posljednjeg USB-a | ✅ Opcionalno, dok program radi |
 | 🧾 Lokalni sigurnosni dnevnik | ✅ Implementirano |
 | 🛡️ Lokalno šifriran registar | ✅ Windows DPAPI CurrentUser |
 | 🗝️ Rezervna Windows lozinka / Hello | ✅ Zadržano; nije promijenjeno |
 | ☁️ Bez udaljenog servisa i telemetrije | ✅ U trenutačnom kodu |
-| 📦 Portable testni ZIP za Windows x64 | ✅ GitHub Actions artifact |
+| 📦 Portable EXE i ZIP za Windows x64 | ✅ GitHub prerelease i Actions artifact |
 | 🔓 Otključavanje Windows prijave putem USB-a | ⏳ Nije implementirano |
 | 🔐 FIDO2 / hardverski challenge-response | ⏳ Nije implementirano |
 | 🖊️ Potpisani Windows instalacijski program | ⏳ Nije implementirano |
@@ -52,13 +52,13 @@ Vizualni identitet koristi tamnoplavu **#0B2D5C**, plavu **#0F6BFF** i tirkiznu 
 
 ## Preuzimanje i testiranje
 
-1. Otvori [GitHub Actions: Windows Build](https://github.com/bren-wp/USB-Key/actions/workflows/windows-build.yml).
-2. Odaberi zadnje uspješno izvršavanje na grani **main**.
-3. U odjeljku **Artifacts** preuzmi **Brendigo-USB-Key-win-x64-unsigned**.
-4. Raspakiraj arhivu i pokreni izvršnu datoteku.
-5. Za prvo testiranje ostavi **automatsko zaključavanje isključeno** i provjeri uobičajenu Windows prijavu.
+1. Otvori [GitHub Releases](https://github.com/bren-wp/USB-Key/releases) i odaberi najnovije **v0.2.0-alpha** testno izdanje.
+2. Preuzmi **Brendigo-USB-Key-Portable.exe** (izvršnu datoteku) ili **Brendigo-USB-Key-win-x64-portable.zip** (kompletan paket).
+3. Preuzmi **SHA256SUMS.txt** i usporedi SHA-256 kontrolne sume preuzetih datoteka.
+4. Za pripremu više USB stickova preuzmi **Brendigo-USB-Key-USB-Setup-Kit.zip** ili pročitaj vodiče [HR](docs/SETUP-USB-HR.md) i [EN](docs/SETUP-USB-EN.md).
+5. Za prvo testiranje ostavi **auto-lock isključen** te provjeri da poznaješ Windows lozinku ili Hello PIN.
 
-Aplikacija je *self-contained* i ne traži zasebnu instalaciju .NET runtimea. Izvršna datoteka nije digitalno potpisana. GitHub **Releases** zasad nema objavljeno izdanje: Actions artifact nije isto što i Release.
+Aplikacija je self-contained (ne traži zasebnu instalaciju .NET runtimea). **EXE je nepotpisan i namijenjen testiranju**, pa Windows može prikazati sigurnosno upozorenje. Nemoj zaobilaziti poslovne sigurnosne politike. Alternativni [Windows Actions build](https://github.com/bren-wp/USB-Key/actions/workflows/windows-build.yml) sadrži iste vrste testnih datoteka.
 
 **Napomena za USB:** Program se pokreće **na računalu nakon Windows prijave**. USB stick sadrži lokalni token, a ne samostalni Windows prijavni program. Možeš na sticku držati kopiju portable aplikacije, ali umetanje USB-a neće automatski pokrenuti aplikaciju na zaključanom sustavu.
 
@@ -111,11 +111,11 @@ Za self-contained izdanje:
 
 1. Piksel-po-piksel usklađivanje Splash, Onboarding, Dashboard, USB Keys, Recovery, Security Log, Settings i svih dijaloga s vizualnim referencama.
 2. Stvarne snimke zaslona, regresijski testovi, visoki DPI i pristupačnost.
-3. Jasno nazvan **Portable.exe**, SHA-256 provjera i dokumentacijski USB komplet.
+3. Dodatne kontrole kvalitete portable paketa, provjera hash-suma i USB dokumentacijskog kompleta.
 4. Potpuni sigurnosni i dead-code audit, testiranje na više fizičkih USB stickova.
 5. Posebno projektirana hardverska autentifikacija i eventualna Windows prijavna integracija uz zajamčen oporavak.
 
-[Tehnička arhitektura](docs/ARCHITECTURE.md) · [Nastavak razvoja — prompt](docs/PROMPT-NASTAVAK-HR.md)
+[Tehnička arhitektura](docs/ARCHITECTURE.md) · [Sigurnosni pregled 0.2](docs/SECURITY-AUDIT-0.2-HR.md) · [Nastavak razvoja — prompt](docs/PROMPT-NASTAVAK-HR.md)
 
 ---
 

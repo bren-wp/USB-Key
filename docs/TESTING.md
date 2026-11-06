@@ -8,7 +8,7 @@
 - [ ] Ponovna registracija istog USB-a odbijena je bez prepisivanja datoteke.
 - [ ] Spojen USB #1: status prepoznat.
 - [ ] Uklanjanje USB #1 uz priključen USB #2 ne zaključava računalo.
-- [ ] Uklanjanje posljednjeg registriranog USB-a uz auto-lock uključeno zaključava sesiju nakon dvije neuspjele provjere.
+- [ ] Uklanjanje posljednjeg registriranog USB-a uz auto-lock uključeno zaključava sesiju nakon tri uzastopne neuspjele provjere.
 - [ ] Bez prethodno prepoznatog ključa nema automatskog zaključavanja.
 - [ ] Auto-lock je po zadanim postavkama isključen.
 - [ ] Isključen auto-lock: uklanjanje USB-a ne zaključava.
@@ -23,6 +23,6 @@
 
 ## Automatizacija
 
-GitHub Actions radi restore, WPF Release build i prilaže samostalni nepotpisani ZIP. Automatski build nije zamjena za testiranje na fizičkom Windows računalu ili neovisnu sigurnosnu provjeru.
+GitHub Actions izvodi WPF Release build, smoke testove USB tokena i generira nepotpisani Portable EXE, ZIP, USB setup kit i SHA-256 sume; na main grani pokušava objaviti GitHub prerelease. Automatski build nije zamjena za testiranje na fizičkom Windows računalu ili neovisnu sigurnosnu provjeru.
 
 **Ne testiraj automatsko zaključavanje ako nisi provjerio da znaš Windows lozinku ili Hello.** BitLocker oporavak je odvojen.

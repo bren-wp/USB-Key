@@ -1,4 +1,4 @@
-# Sigurnosni model — Brendigo USB Key 0.1
+# Sigurnosni model — Brendigo USB Key 0.2
 
 ## Granice sustava
 
@@ -12,7 +12,7 @@ U ovoj verziji ne postoji komponenta koja može otključati Windows logon. Ne po
 | Kopirana datoteka na običnom sticku | **Nije zaštićeno**; zahtijeva hardverski izazov-odgovor |
 | Napadač s pristupom otključanoj Windows sesiji | **Nije riješeno**; Windows je granica povjerenja |
 | Čitanje lokalnog registra drugim Windows računom | DPAPI CurrentUser štiti registar |
-| Kratki prekid USB detekcije | Dva uzastopna neuspjela skeniranja prije auto-locka |
+| Kratki prekid USB detekcije | Tri uzastopna neuspjela skeniranja prije auto-locka |
 | Gašenje procesa / restart računala | Auto-lock nije stalno aktivna zaštita |
 | Gubitak svih USB-ova | Windows lozinka/Hello ostaju neizmijenjeni |
 | Gubitak BitLocker ključa | Izvan opsega; BitLocker recovery key mora biti sigurno spremljen |

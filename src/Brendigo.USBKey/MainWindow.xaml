@@ -224,7 +224,7 @@
               <CheckBox x:Name="AutoLockCheck" Content="Zaključaj Windows kada nestane posljednji registrirani USB"
                         FontSize="15" Margin="0,0,0,9"/>
               <TextBlock TextWrapping="Wrap" Foreground="#597392" Margin="22,0,0,24"
-                         Text="Radi samo dok je aplikacija pokrenuta. Zaključavanje se aktivira tek nakon što je u toj sesiji prepoznat ispravan USB. Dva uzastopna neuspješna skeniranja pokreću zaključavanje."/>
+                         Text="Radi samo dok je aplikacija pokrenuta. Zaključavanje se aktivira tek nakon što je u toj sesiji prepoznat ispravan USB. Tri uzastopna neuspješna skeniranja pokreću zaključavanje."/>
               <CheckBox x:Name="StartupCheck" Content="Pokreni Brendigo USB Key nakon prijave u Windows"
                         FontSize="15" Margin="0,0,0,9"/>
               <TextBlock TextWrapping="Wrap" Foreground="#597392" Margin="22,0,0,24"
