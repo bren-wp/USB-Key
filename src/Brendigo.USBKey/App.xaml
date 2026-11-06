@@ -1,6 +1,7 @@
 <Application x:Class="Brendigo.USBKey.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             ShutdownMode="OnMainWindowClose"
             >
   <Application.Resources>
     <SolidColorBrush x:Key="Navy" Color="#0B2D5C"/>
