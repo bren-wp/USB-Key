@@ -32,6 +32,22 @@ internal static class Program
         Snapshot(welcome, output, "onboarding-finish.png"); saved++;
 
         var window = new MainWindow(visualPreview: true);
+        // Guard against WPF ContentTemplate regressions displaying type names
+        // instead of accessible labels in the sidebar.
+        foreach (string name in new[]
+        {
+            "DashboardNav", "KeysNav", "RecoveryNav",
+            "SecurityNav", "SettingsNav", "AboutNav"
+        })
+        {
+            if (window.FindName(name) is not Button nav ||
+                nav.Content is not string label ||
+                string.IsNullOrWhiteSpace(label) ||
+                nav.ContentTemplate is null)
+                throw new InvalidOperationException(
+                    "Sidebar navigation must render a labeled vector icon: " + name);
+        }
+        Console.WriteLine("PASS: all six sidebar navigation buttons have explicit text captions.");
         Snapshot(window, output, "dashboard.png"); saved++;
         Visit(window, "KeysNav");
         Snapshot(window, output, "usb-keys.png"); saved++;

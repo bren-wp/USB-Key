@@ -43,3 +43,7 @@ Real Windows visual verification at 100%, 125%, 150% and 200% remains required.
 The runner also verifies that the USB revoke action cannot be confirmed
 until the warning checkbox is acknowledged, and that unchecking it disables
 the action again. The test does not revoke a physical USB key.
+
+## Navigacijske regresije
+
+Windows UI runner dodatno provjerava da svih šest gumba bočne navigacije ima stvaran tekstualni naziv i vlastiti predložak uz vektorsku ikonu. To sprječava ranije uočenu grešku u kojoj je WPF umjesto naziva stranice prikazivao naziv klase StackPanel. Provjera nije ekvivalent ručnom testu čitača zaslona.
