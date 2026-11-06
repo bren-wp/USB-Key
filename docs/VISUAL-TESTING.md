@@ -29,3 +29,17 @@ To render locally on Windows:
     dotnet run --project tests/Brendigo.USBKey.Visual/Brendigo.USBKey.Visual.csproj --configuration Release -- assets/screenshots
 
 Review images at 100%, 135%, 150% and 200% Windows DPI on real hardware before claiming a 1:1 match.
+
+## Responsive and interaction regression variants
+
+The Windows visual runner also renders the real WPF Dashboard at 930x660
+and the Splash screen at 860x610. It saves dashboard-compact.png and
+splash-compact.png, and checks that compact Dashboard cards reflow rather
+than overlap. A third rendering, dashboard-125dpi.png, uses 120 DPI (125%).
+
+These are WPF offscreen regression checks, not physical-monitor DPI tests.
+Real Windows visual verification at 100%, 125%, 150% and 200% remains required.
+
+The runner also verifies that the USB revoke action cannot be confirmed
+until the warning checkbox is acknowledged, and that unchecking it disables
+the action again. The test does not revoke a physical USB key.
