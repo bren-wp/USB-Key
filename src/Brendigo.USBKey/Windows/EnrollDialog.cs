@@ -198,7 +198,14 @@ public sealed class EnrollDialog : Window
         Populate(drives);
     }
 
-    private void RefreshDrives() => Populate(UsbKeyManager.AvailableDrives());
+    private void RefreshDrives()
+    {
+        try { Populate(UsbKeyManager.AvailableDrives()); }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            _status.Text = "Osvježavanje USB popisa nije uspjelo: " + ex.Message;
+        }
+    }
 
     private void Populate(IReadOnlyList<string> drives)
     {

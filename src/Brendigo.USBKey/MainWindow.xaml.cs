@@ -218,18 +218,34 @@ public partial class MainWindow : Window
                     ? "Nijedan registrirani USB ključ trenutačno nije spojen."
                     : "Još nema registriranih ključeva. Za početak umetni USB stick.";
             if (_page == "Security") RefreshSecurityLog();
+            // A manual refresh after an error also resumes the regular monitoring
+            // timer; an error must not disable the service forever until a restart.
+            if (_tray != null && !_timer.IsEnabled)
+                _timer.Start();
         }
         catch (Exception ex)
         {
             _timer.Stop();
-            MessageBox.Show("Provjera USB ključeva nije uspjela. Nadzor je privremeno zaustavljen.\n\n" +
+            _manager.ResetMonitor(); // Never treat an uncertain scan as confirmed USB removal.
+            ConnectedCount.Text = "—";
+            StatusMessage.Text = "Nadzor USB uređaja privremeno je zaustavljen. " +
+                "Provjeri priključak i odaberi Osvježi status za ponovni pokušaj.";
+            MessageBox.Show(this,
+                "Provjera USB ključeva nije uspjela. Nadzor je zaustavljen " +
+                "radi sigurnosti. Nakon otklanjanja pogreške odaberi Osvježi status.\n\n" +
                 ex.Message, "Brendigo USB Key", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
     private void Enroll_Click(object sender, RoutedEventArgs e)
     {
-        var drives = UsbKeyManager.AvailableDrives();
+        IReadOnlyList<string> drives;
+        try { drives = UsbKeyManager.AvailableDrives(); }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            ShowError("Nije moguće provjeriti USB pogone", ex);
+            return;
+        }
         // Let the registration dialog remain open while a USB is inserted, then refresh.
         var dialog = new EnrollDialog(drives) { Owner = this };
         if (dialog.ShowDialog() != true) return;
