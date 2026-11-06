@@ -6,7 +6,7 @@ Screens captured: Splash/Welcome, onboarding recovery/USB/final step, dashboard,
 
 The renderer measures/arranges each real visual tree and creates PNGs via WPF RenderTargetBitmap. Basic checks reject all-blank images. It does not verify DPI scaling, native title bars, mouse interactions, screen readers, USB hardware or exact similarity to unavailable reference screenshots.
 
-The following 13 captures are stored in assets/screenshots and embedded in the README after passing on Windows CI:
+The following 16 captures are stored in assets/screenshots and embedded in the README after passing on Windows CI:
 
 - splash-welcome.png
 - onboarding-recovery.png
@@ -21,6 +21,9 @@ The following 13 captures are stored in assets/screenshots and embedded in the R
 - register-usb.png
 - rename-usb.png
 - revoke-usb.png
+- access-initial-setup.png
+- access-unlock.png
+- access-change-password.png
 
 The repository README should show these images **only after the CI job confirms they exist and they have been committed to assets/screenshots/**. Concept mockups retain explicit "concept" labels.
 
@@ -47,3 +50,7 @@ the action again. The test does not revoke a physical USB key.
 ## Navigacijske regresije
 
 Windows UI runner dodatno provjerava da svih šest gumba bočne navigacije ima stvaran tekstualni naziv i vlastiti predložak uz vektorsku ikonu. To sprječava ranije uočenu grešku u kojoj je WPF umjesto naziva stranice prikazivao naziv klase StackPanel. Provjera nije ekvivalent ručnom testu čitača zaslona.
+
+## Local password dialog captures
+
+Three additional actual WPF renders cover the first-use Brendigo bootstrap, later management unlock, and authenticated password change. The visual test uses a temporary Windows user folder without creating a live user account or capturing real secrets; it verifies that the confirmation button stays disabled when password inputs are empty. The one-time default does **not** unlock Windows itself.

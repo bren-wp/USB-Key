@@ -14,7 +14,7 @@ foreach ($view in $views) {
 
     $matches = [regex]::Matches(
         $markup,
-        '(?:Click|SelectionChanged|RequestNavigate)="([A-Za-z_][A-Za-z0-9_]*)"'
+        '(?:Click|SelectionChanged|RequestNavigate|PasswordChanged|Checked|Unchecked)="([A-Za-z_][A-Za-z0-9_]*)"'
     )
     if ($matches.Count -gt 0 -and -not (Test-Path -LiteralPath $codeBehind)) {
         throw "Missing code-behind for $($view.Name)"
@@ -51,8 +51,8 @@ foreach ($name in $images) {
     }
     $checks++
 }
-if (@($images).Count -ne 13) {
-    throw "README must link all 13 WPF snapshots, found $(@($images).Count)."
+if (@($images).Count -ne 16) {
+    throw "README must link all 16 WPF snapshots, found $(@($images).Count)."
 }
 
 foreach ($file in @(

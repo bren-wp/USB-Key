@@ -32,7 +32,7 @@ jobs:
       - name: Run USB token smoke tests
         run: dotnet run --project tests/Brendigo.USBKey.Smoke/Brendigo.USBKey.Smoke.csproj --configuration Release
 
-      - name: Render and validate 13 WPF screens and responsive/DPI variants
+      - name: Render and validate 16 WPF screens and responsive/DPI variants
         shell: pwsh
         run: |
           dotnet run --project tests/Brendigo.USBKey.Visual/Brendigo.USBKey.Visual.csproj --configuration Release -- artifacts/screenshots

@@ -5,6 +5,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Brendigo.USBKey;
 using Brendigo.USBKey.Windows;
+using Brendigo.USBKey.Services;
 
 namespace Brendigo.USBKey.Visual;
 
@@ -80,6 +81,33 @@ internal static class Program
         Console.WriteLine("PASS: revoke confirmation is gated by acknowledgement.");
         Snapshot(revoke, output, "revoke-usb.png"); saved++;
 
+        // Real WPF access dialogs with no password or account data saved.
+        string accessFolder = Path.Combine(Path.GetTempPath(),
+            "brendigo-wpf-access-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            var access = new AppPasswordService(accessFolder);
+            var firstSetup = new AccessDialog(access, AccessDialogMode.InitialSetup);
+            Snapshot(firstSetup, output, "access-initial-setup.png"); saved++;
+            var unlock = new AccessDialog(access, AccessDialogMode.Unlock);
+            Snapshot(unlock, output, "access-unlock.png"); saved++;
+            var change = new AccessDialog(access, AccessDialogMode.ChangePassword);
+            Snapshot(change, output, "access-change-password.png"); saved++;
+
+            foreach (var dialog in new[] { firstSetup, unlock, change })
+            {
+                if (dialog.FindName("ConfirmButton") is not Button confirm ||
+                    confirm.IsEnabled)
+                    throw new InvalidOperationException(
+                        "App management action must not be enabled with an empty password.");
+            }
+            Console.WriteLine("PASS: all access dialogs require password input.");
+        }
+        finally
+        {
+            if (Directory.Exists(accessFolder)) Directory.Delete(accessFolder, recursive: true);
+        }
+
         // Additional genuine WPF renderings for small windows and 125% pixel density.
         // Do not count them as distinct screens; they are regression variants.
         welcome.Width = 860;
@@ -103,8 +131,8 @@ internal static class Program
         Snapshot(window, output, "dashboard-125dpi.png", dpi: 120);
         Console.WriteLine("PASS: compact layouts and 125% WPF render scaling.");
 
-        if (saved != 13)
-            throw new InvalidOperationException($"Expected 13 screens, got {saved}.");
+        if (saved != 16)
+            throw new InvalidOperationException($"Expected 16 screens, got {saved}.");
 
         Console.WriteLine($"PASS: captured {saved} actual WPF-rendered UI views in {output}.");
         return 0;

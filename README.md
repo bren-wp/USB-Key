@@ -31,12 +31,19 @@ Brendigo USB Key aplikacija je za Windows koja omogućuje registraciju nekoliko 
 | 🔒 Zaključavanje nakon uklanjanja posljednjeg USB-a | ✅ Opcionalno, dok program radi |
 | 🧾 Lokalni sigurnosni dnevnik | ✅ Implementirano |
 | 🛡️ Lokalno šifriran registar | ✅ Windows DPAPI CurrentUser |
+| 🔐 Lokalna lozinka upravljanja aplikacijom | ✅ Početna Brendigo, obvezna promjena, PBKDF2 + DPAPI |
 | 🗝️ Rezervna Windows lozinka / Hello | ✅ Zadržano; nije promijenjeno |
 | ☁️ Bez udaljenog servisa i telemetrije | ✅ U trenutačnom kodu |
 | 📦 Portable EXE i ZIP za Windows x64 | ✅ GitHub prerelease i Actions artifact |
 | 🔓 Otključavanje Windows prijave putem USB-a | ⏳ Nije implementirano |
 | 🔐 FIDO2 / hardverski challenge-response | ⏳ Nije implementirano |
 | 🖊️ Potpisani Windows instalacijski program | ⏳ Nije implementirano |
+
+## Prva prijava i lozinka aplikacije
+
+Pri prvom otvaranju upravljanja Brendigo USB Key traži **početnu lozinku: `Brendigo`**. Ona vrijedi samo za postavljanje: zatim se mora upisati nova privatna lozinka od najmanje **12 znakova**, koju je potrebno sigurno sačuvati. Sljedeća otvaranja Dashboarda i povratak iz Windows obavijesnog područja traže tu novu lozinku. Možeš je promijeniti u **Postavke → Promijeni lozinku aplikacije**, unosom postojeće.
+
+Ovo **nije Windows lozinka** i ne mijenja Windows Hello niti podatke za prijavu u Windows. Pristup je lokalno ograničen na korisnikov Windows profil; nije zamišljen kao zaštita od zlonamjernog programa ili administratora s pristupom tom profilu. Brendigo USB Key i dalje ne otključava zaključani Windows putem običnog USB sticka.
 
 ## Stvarni prikazi aplikacije
 
@@ -51,7 +58,7 @@ Ove PNG snimke nastale su **iz stvarnih WPF/XAML kontrola** automatskim renderir
 ### Svaki zaslon — provjeren WPF prikaz
 
 <details>
-<summary><strong>Otvori galeriju svih 13 zaslona i dijaloga</strong></summary>
+<summary><strong>Otvori galeriju svih 16 zaslona i dijaloga</strong></summary>
 
 | USB Keys | Registracija USB-a |
 |:---:|:---:|
@@ -76,6 +83,14 @@ Ove PNG snimke nastale su **iz stvarnih WPF/XAML kontrola** automatskim renderir
 | Opoziv USB ključa |
 |:---:|
 | <img src="assets/screenshots/revoke-usb.png" width="480" alt="Brendirani dijalog za opoziv USB-a s potvrdom"> |
+
+| Prva lozinka aplikacije | Prijava u aplikaciju |
+|:---:|:---:|
+| <img src="assets/screenshots/access-initial-setup.png" width="480" alt="Brendigo USB Key prva lozinka i promjena"> | <img src="assets/screenshots/access-unlock.png" width="480" alt="Brendigo USB Key lokalna prijava"> |
+
+| Promjena lozinke |
+|:---:|
+| <img src="assets/screenshots/access-change-password.png" width="480" alt="Brendigo USB Key promjena lokalne lozinke"> |
 
 </details>
 
