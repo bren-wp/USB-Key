@@ -149,6 +149,12 @@
       <Setter Property="CornerRadius" Value="14"/>
       <Setter Property="Padding" Value="20"/>
       <Setter Property="Margin" Value="0,0,12,12"/>
+      <Setter Property="Effect">
+        <Setter.Value>
+          <DropShadowEffect Color="#244F77" BlurRadius="10"
+                            ShadowDepth="2" Opacity="0.10"/>
+        </Setter.Value>
+      </Setter>
     </Style>
   </Application.Resources>
 </Application>

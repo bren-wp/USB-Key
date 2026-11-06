@@ -84,7 +84,10 @@
                          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
               <Border Style="{StaticResource Card}" Margin="0,0,12,12">
                 <StackPanel>
-                  <TextBlock Text="▣" FontSize="34" Foreground="#0F6BFF"/>
+                  <Path Data="M8,7 H16 V21 H8 Z M10,3 H14 V7 M10,11 H14 M10,16 H14"
+                         Width="30" Height="32" Stretch="Uniform" Fill="Transparent"
+                         Stroke="#0F6BFF" StrokeThickness="2.2"
+                         StrokeLineJoin="Round" Margin="0,0,0,3"/>
                   <TextBlock Text="Više USB ključeva" FontSize="19" FontWeight="Bold" Margin="0,9,0,7"/>
                   <TextBlock Text="Svaki stick ima vlastiti nasumični token."
                              TextWrapping="Wrap" Foreground="#58748E"/>
@@ -92,7 +95,10 @@
               </Border>
               <Border Style="{StaticResource Card}" Margin="0,0,0,12">
                 <StackPanel>
-                  <TextBlock Text="◇" FontSize="34" Foreground="#14B8A6"/>
+                  <Path Data="M12,2 L20,6 V12 C20,17 17,20 12,22 C7,20 4,17 4,12 V6 Z M8,12 L11,15 16,10"
+                         Width="30" Height="32" Stretch="Uniform" Fill="Transparent"
+                         Stroke="#14B8A6" StrokeThickness="2.2"
+                         StrokeLineJoin="Round" Margin="0,0,0,3"/>
                   <TextBlock Text="Rezervni pristup" FontSize="19" FontWeight="Bold" Margin="0,9,0,7"/>
                   <TextBlock Text="Windows lozinka i Hello nisu izmijenjeni."
                              TextWrapping="Wrap" Foreground="#58748E"/>
