@@ -33,6 +33,6 @@ public static class StartupService
             throw new InvalidOperationException(
                 "Automatsko pokretanje omogućite tek u objavljenoj Windows aplikaciji.");
         using var run = Registry.CurrentUser.CreateSubKey(RunKey);
-        run.SetValue(ValueName, "\"" + executable + "\"", RegistryValueKind.String);
+        run.SetValue(ValueName, "\"" + executable + "\" --autostart", RegistryValueKind.String);
     }
 }
