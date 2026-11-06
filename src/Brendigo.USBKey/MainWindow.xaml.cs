@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 using System.Windows.Navigation;
+using Microsoft.Win32;
 using Brendigo.USBKey.Models;
 using Brendigo.USBKey.Services;
 using Brendigo.USBKey.Windows;
@@ -16,6 +17,7 @@ public partial class MainWindow : Window
     private readonly DispatcherTimer _timer;
     private TrayController? _tray;
     private bool _exitRequested;
+    private string _rawEvents = "";
     private string _page = "Dashboard";
 
     public MainWindow() : this(visualPreview: false) { }
@@ -36,6 +38,7 @@ public partial class MainWindow : Window
         StartupCheck.IsChecked = StartupService.IsEnabled();
         ShowPage("Dashboard");
         SizeChanged += (_, _) => UpdateResponsiveLayout();
+        Loaded += (_, _) => UpdateResponsiveLayout();
         _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
         _timer.Tick += (_, _) => RefreshStatus();
         if (!visualPreview)
@@ -108,6 +111,26 @@ public partial class MainWindow : Window
         SidebarColumn.Width = new GridLength(ActualWidth < 1090 ? 206 : 242);
         LocalStatusBadge.Visibility = ActualWidth < 1110
             ? Visibility.Collapsed : Visibility.Visible;
+
+        // Reflow all metric cards and the quick-actions panel rather than
+        // squeezing important controls into unreadable columns on small windows.
+        bool compact = ActualWidth < 1150;
+        for (int i = 0; i < DashboardMetricsGrid.ColumnDefinitions.Count; i++)
+            DashboardMetricsGrid.ColumnDefinitions[i].Width =
+                compact && i > 0 ? new GridLength(0) : new GridLength(1, GridUnitType.Star);
+        Grid.SetColumn(RegisteredMetricCard, 0);
+        Grid.SetRow(RegisteredMetricCard, 0);
+        Grid.SetColumn(ConnectedMetricCard, compact ? 0 : 1);
+        Grid.SetRow(ConnectedMetricCard, compact ? 1 : 0);
+        Grid.SetColumn(AutoLockMetricCard, compact ? 0 : 2);
+        Grid.SetRow(AutoLockMetricCard, compact ? 2 : 0);
+
+        DashboardPanelsGrid.ColumnDefinitions[1].Width =
+            compact ? new GridLength(0) : new GridLength(290);
+        Grid.SetColumn(KeysSummaryCard, 0);
+        Grid.SetRow(KeysSummaryCard, 0);
+        Grid.SetColumn(QuickActionsCard, compact ? 0 : 1);
+        Grid.SetRow(QuickActionsCard, compact ? 1 : 0);
     }
 
     private void KeysGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -148,7 +171,7 @@ public partial class MainWindow : Window
             button.Background = (button.Tag as string) == page
                 ? new SolidColorBrush(Color.FromRgb(15, 107, 255))
                 : Brushes.Transparent;
-        if (page == "Security") EventLogBox.Text = _manager.ReadEvents();
+        if (page == "Security") RefreshSecurityLog();
     }
 
     private void RefreshStatus()
@@ -181,7 +204,7 @@ public partial class MainWindow : Window
                 : rows.Count > 0
                     ? "Nijedan registrirani USB ključ trenutačno nije spojen."
                     : "Još nema registriranih ključeva. Za početak umetni USB stick.";
-            if (_page == "Security") EventLogBox.Text = _manager.ReadEvents();
+            if (_page == "Security") RefreshSecurityLog();
         }
         catch (Exception ex)
         {
@@ -247,6 +270,78 @@ public partial class MainWindow : Window
     {
         try { Process.Start(new ProcessStartInfo("ms-settings:signinoptions") { UseShellExecute = true }); }
         catch (Exception ex) { ShowError("Nije moguće otvoriti Windows postavke", ex); }
+    }
+
+    private void RefreshSecurityLog()
+    {
+        try
+        {
+            _rawEvents = _manager.ReadEvents();
+            ApplySecurityLogFilter();
+        }
+        catch (Exception ex)
+        {
+            EventCountText.Text = "Greška pri čitanju dnevnika";
+            EventLogBox.Text = "Nije moguće učitati sigurnosni dnevnik: " + ex.Message;
+        }
+    }
+
+    private void ApplySecurityLogFilter()
+    {
+        string query = EventSearchBox.Text.Trim();
+        var lines = _rawEvents
+            .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
+            .Where(line => line != "Još nema sigurnosnih događaja.");
+        if (query.Length > 0)
+            lines = lines.Where(line =>
+                line.Contains(query, StringComparison.CurrentCultureIgnoreCase));
+        var filtered = lines.ToArray();
+        EventCountText.Text = filtered.Length == 0
+            ? "Nema događaja za prikaz."
+            : $"Prikazano događaja: {filtered.Length}";
+        EventLogBox.Text = filtered.Length == 0
+            ? "Nema sigurnosnih događaja koji odgovaraju kriteriju."
+            : string.Join(Environment.NewLine, filtered);
+    }
+
+    private void EventSearch_TextChanged(object sender, TextChangedEventArgs e)
+        => ApplySecurityLogFilter();
+
+    private void RefreshLog_Click(object sender, RoutedEventArgs e) => RefreshSecurityLog();
+
+    private void ExportLog_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            RefreshSecurityLog();
+            if (string.IsNullOrWhiteSpace(_rawEvents) ||
+                _rawEvents == "Još nema sigurnosnih događaja.")
+            {
+                MessageBox.Show(this, "Nema događaja za izvoz.", "Sigurnosni dnevnik",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            if (MessageBox.Show(this,
+                "Izvoz sadrži nazive USB ključeva i vremena događaja. " +
+                "TXT datoteka neće biti šifrirana. Želiš li nastaviti?",
+                "Privatnost izvoza", MessageBoxButton.YesNo,
+                MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
+
+            var dialog = new SaveFileDialog
+            {
+                Title = "Izvoz sigurnosnog dnevnika",
+                FileName = $"Brendigo-USB-Key-Dnevnik-{DateTime.Now:yyyy-MM-dd}.txt",
+                Filter = "Tekstualna datoteka (*.txt)|*.txt",
+                DefaultExt = ".txt",
+                AddExtension = true,
+                OverwritePrompt = true
+            };
+            if (dialog.ShowDialog(this) != true) return;
+            File.WriteAllText(dialog.FileName, _rawEvents, System.Text.Encoding.UTF8);
+            MessageBox.Show(this, "Dnevnik je izvezen.", "Brendigo USB Key",
+                MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex) { ShowError("Izvoz dnevnika nije uspio", ex); }
     }
 
     private void OpenDataFolder_Click(object sender, RoutedEventArgs e)

@@ -81,27 +81,32 @@
         </Border>
 
         <StackPanel x:Name="DashboardPage">
-          <Grid Margin="0,0,0,12">
+          <Grid x:Name="DashboardMetricsGrid" Margin="0,0,0,12">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="*"/>
               <ColumnDefinition Width="*"/>
               <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Border Style="{StaticResource Card}" Grid.Column="0">
+            <Border x:Name="RegisteredMetricCard" Style="{StaticResource Card}" Grid.Column="0">
               <StackPanel>
                 <TextBlock Text="REGISTRIRANI KLJUČEVI" FontSize="11" FontWeight="Bold" Foreground="#587698"/>
                 <TextBlock x:Name="RegisteredCount" Text="0" FontSize="42" FontWeight="Bold" Margin="0,8,0,0"/>
                 <TextBlock Text="Pojedinačno registrirani USB stickovi" FontSize="12" Foreground="#67819A" TextWrapping="Wrap"/>
               </StackPanel>
             </Border>
-            <Border Style="{StaticResource Card}" Grid.Column="1">
+            <Border x:Name="ConnectedMetricCard" Style="{StaticResource Card}" Grid.Column="1">
               <StackPanel>
                 <TextBlock Text="TRENUTAČNO SPOJENI" FontSize="11" FontWeight="Bold" Foreground="#587698"/>
                 <TextBlock x:Name="ConnectedCount" Text="0" FontSize="42" FontWeight="Bold" Margin="0,8,0,0"/>
                 <TextBlock Text="Ključevi s valjanim lokalnim dokazom" FontSize="12" Foreground="#67819A" TextWrapping="Wrap"/>
               </StackPanel>
             </Border>
-            <Border Style="{StaticResource Card}" Grid.Column="2">
+            <Border x:Name="AutoLockMetricCard" Style="{StaticResource Card}" Grid.Column="2">
               <StackPanel>
                 <TextBlock Text="AUTO-ZAKLJUČAVANJE" FontSize="11" FontWeight="Bold" Foreground="#587698"/>
                 <TextBlock x:Name="AutoLockState" Text="Isključeno" FontSize="22" FontWeight="Bold" Margin="0,17,0,4"/>
@@ -110,12 +115,16 @@
             </Border>
           </Grid>
 
-          <Grid>
+          <Grid x:Name="DashboardPanelsGrid">
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto"/>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="*"/>
               <ColumnDefinition Width="290"/>
             </Grid.ColumnDefinitions>
-            <Border Style="{StaticResource Card}" Grid.Column="0" MinHeight="290">
+            <Border x:Name="KeysSummaryCard" Style="{StaticResource Card}" Grid.Column="0" MinHeight="290">
               <StackPanel>
                 <TextBlock Text="Tvoji USB ključevi" FontSize="20" FontWeight="Bold" Margin="0,0,0,9"/>
                 <TextBlock x:Name="StatusMessage" Text="Provjera USB uređaja..."
@@ -144,7 +153,7 @@
                 </ListBox>
               </StackPanel>
             </Border>
-            <Border Grid.Column="1" Style="{StaticResource Card}" Margin="0,0,0,12">
+            <Border x:Name="QuickActionsCard" Grid.Column="1" Style="{StaticResource Card}" Margin="0,0,0,12">
               <StackPanel>
                 <TextBlock Text="Brze radnje" FontSize="20" FontWeight="Bold" Margin="0,0,0,14"/>
                 <Button Content="+  Registriraj USB" Style="{StaticResource PrimaryButton}"
@@ -229,12 +238,25 @@
         <StackPanel x:Name="SecurityPage" Visibility="Collapsed">
           <Border Style="{StaticResource Card}">
             <StackPanel>
-              <DockPanel Margin="0,0,0,14" LastChildFill="False">
-                <TextBlock Text="Lokalni sigurnosni događaji" FontSize="20" FontWeight="Bold"
-                           VerticalAlignment="Center" DockPanel.Dock="Left"/>
-                <Button Content="Otvori mapu zapisnika" Click="OpenDataFolder_Click"
-                        Style="{StaticResource SecondaryButton}" DockPanel.Dock="Right"/>
-              </DockPanel>
+              <TextBlock Text="Lokalni sigurnosni događaji" FontSize="20" FontWeight="Bold"
+                         Margin="0,0,0,8"/>
+              <TextBlock Text="Pregled posljednjih 250 događaja. Podaci se obrađuju isključivo lokalno."
+                         FontSize="13" Foreground="#597392" TextWrapping="Wrap"
+                         Margin="0,0,0,15"/>
+              <TextBlock Text="Pretraži događaje" FontWeight="SemiBold" Margin="0,0,0,7"/>
+              <TextBox x:Name="EventSearchBox" Height="42" MaxLength="120"
+                       AutomationProperties.Name="Pretraživanje sigurnosnih događaja"
+                       TextChanged="EventSearch_TextChanged" Margin="0,0,0,12"/>
+              <WrapPanel Margin="0,0,0,12">
+                <Button Content="Osvježi" Click="RefreshLog_Click"
+                        Style="{StaticResource SecondaryButton}" Margin="0,0,9,9"/>
+                <Button Content="Izvezi u TXT" Click="ExportLog_Click"
+                        Style="{StaticResource PrimaryButton}" Margin="0,0,9,9"/>
+                <Button Content="Otvori mapu" Click="OpenDataFolder_Click"
+                        Style="{StaticResource SecondaryButton}" Margin="0,0,9,9"/>
+              </WrapPanel>
+              <TextBlock x:Name="EventCountText" Text="Nema događaja"
+                         Foreground="#597392" FontSize="12" Margin="0,0,0,8"/>
               <TextBox x:Name="EventLogBox" FontFamily="Consolas" FontSize="12"
                        TextWrapping="Wrap" AcceptsReturn="True"
                        VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
