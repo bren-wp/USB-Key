@@ -51,8 +51,11 @@ public sealed class UsbKeyManager
     public IReadOnlyList<KeyRecord> Registered => _state.Keys.AsReadOnly();
     public string EventsPath => _eventsPath;
 
-    public static IReadOnlyList<string> AvailableDrives()
+    public static IReadOnlyList<string> AvailableDrives() => EnumerateDrives(out _);
+
+    private static IReadOnlyList<string> EnumerateDrives(out bool reliable)
     {
+        reliable = true;
         var drives = new List<string>();
         foreach (DriveInfo drive in DriveInfo.GetDrives())
         {
@@ -61,8 +64,8 @@ public sealed class UsbKeyManager
                 if (drive.IsReady && drive.DriveType == DriveType.Removable)
                     drives.Add(drive.RootDirectory.FullName);
             }
-            catch (IOException) { }
-            catch (UnauthorizedAccessException) { }
+            catch (IOException) { reliable = false; }
+            catch (UnauthorizedAccessException) { reliable = false; }
         }
         return drives;
     }
@@ -150,13 +153,15 @@ public sealed class UsbKeyManager
         var connected = new List<ConnectedKey>();
         bool uncertain = false;
         IReadOnlyList<string> drives;
-        try { drives = AvailableDrives(); }
+        bool enumerationReliable = true;
+        try { drives = EnumerateDrives(out enumerationReliable); }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
             // Do not interpret a failing drive enumeration as removal of the last key.
             drives = Array.Empty<string>();
             uncertain = true;
         }
+        uncertain |= !enumerationReliable;
         foreach (var root in drives)
         {
             try
@@ -235,14 +240,26 @@ public sealed class UsbKeyManager
     private RegistryState Load()
     {
         if (!File.Exists(_registryPath)) return new RegistryState();
+        if (new FileInfo(_registryPath).Length > 2 * 1024 * 1024)
+            throw new InvalidDataException("USB registar premašuje sigurnosno ograničenje veličine.");
         byte[] cipher = File.ReadAllBytes(_registryPath);
         byte[] clear = ProtectedData.Unprotect(cipher, null, DataProtectionScope.CurrentUser);
         try
         {
             var data = JsonSerializer.Deserialize<RegistryState>(clear)
                 ?? throw new InvalidDataException("Registar USB ključeva nije valjan.");
-            if (data.Format != 1 || data.Keys == null)
-                throw new InvalidDataException("Nepodržan format registra.");
+            if (data.Format != 1 || data.Keys == null || data.Keys.Count > 2048)
+                throw new InvalidDataException("Nepodržan ili prevelik registar USB ključeva.");
+            var ids = new HashSet<Guid>();
+            foreach (KeyRecord key in data.Keys)
+            {
+                if (key is null || key.Id == Guid.Empty || !ids.Add(key.Id) ||
+                    string.IsNullOrWhiteSpace(key.Name) || key.Name.Length > 64 ||
+                    key.Name.Any(char.IsControl) || key.ProofHex is null ||
+                    key.ProofHex.Length != 64 || !Convert.IsHexString(key.ProofHex))
+                    throw new InvalidDataException(
+                        "USB registar sadrži oštećeni ili duplicirani zapis. Podaci nisu automatski zamijenjeni.");
+            }
             return data;
         }
         finally { CryptographicOperations.ZeroMemory(clear); }
