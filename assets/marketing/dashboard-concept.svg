@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 650" role="img" aria-label="Dizajnerski koncept Brendigo USB Key nadzorne ploče">
+<rect width="1160" height="650" rx="24" fill="#e4f2fe"/>
+<rect x="28" y="24" width="1104" height="606" rx="19" fill="#f2f6fa" stroke="#c7e0f1" stroke-width="3"/>
+<path d="M47 24h232v606H47q-19 0-19-19V43q0-19 19-19Z" fill="#0b2d5c"/>
+<g font-family="Segoe UI,Arial,sans-serif">
+<text x="63" y="79" fill="#fff" font-size="30" font-weight="700">Brendigo</text><text x="63" y="115" fill="#54e4dc" font-size="34" font-weight="700">USB Key</text>
+<rect x="48" y="150" width="211" height="51" rx="12" fill="#0f6bff"/>
+<g font-size="20" fill="#fff"><text x="64" y="184">Nadzorna ploča</text><text x="64" y="252">USB ključevi</text><text x="64" y="318">Rezervni pristup</text><text x="64" y="384">Sigurnosni dnevnik</text><text x="64" y="450">Postavke</text></g>
+<text x="312" y="94" font-size="37" font-weight="700" fill="#0b2d5c">Sigurnosna nadzorna ploča</text><text x="314" y="127" font-size="17" fill="#53718e">Pregled registriranih USB ključeva</text>
+<g fill="#fff" stroke="#d1e0ec" stroke-width="2"><rect x="309" y="166" width="242" height="134" rx="13"/><rect x="568" y="166" width="242" height="134" rx="13"/><rect x="827" y="166" width="271" height="134" rx="13"/><rect x="309" y="321" width="523" height="272" rx="13"/><rect x="849" y="321" width="249" height="272" rx="13"/></g>
+<g fill="#617e99" font-size="17"><text x="326" y="204">Registrirani ključevi</text><text x="586" y="204">Trenutačno spojeni</text><text x="844" y="204">Auto-zaključavanje</text></g>
+<g font-size="54" font-weight="700" fill="#0b2d5c"><text x="327" y="267">3</text><text x="586" y="267">1</text></g><text x="844" y="257" fill="#0b2d5c" font-size="28" font-weight="700">Isključeno</text>
+<text x="327" y="365" fill="#0b2d5c" font-size="24" font-weight="700">Moji USB ključevi</text>
+<g fill="#0b2d5c" font-size="19"><text x="330" y="430">●  Glavni USB</text><text x="330" y="491">○  Rezervni USB</text><text x="330" y="551">○  Dodatni USB</text></g>
+<text x="718" y="430" fill="#098774" font-size="17">Spojen</text>
+<g stroke="#e4edf5" stroke-width="2"><path d="M328 447h485M328 507h485"/></g>
+<text x="868" y="365" fill="#0b2d5c" font-size="24" font-weight="700">Brze radnje</text>
+<rect x="867" y="391" width="212" height="49" rx="9" fill="#0f6bff"/><text x="882" y="421" fill="#fff" font-size="17" font-weight="700">+ Dodaj USB</text>
+<rect x="867" y="458" width="212" height="49" rx="9" fill="#e6f3ff"/><text x="882" y="488" fill="#0b2d5c" font-size="17" font-weight="700">Osvježi status</text>
+<rect x="867" y="526" width="212" height="49" rx="9" fill="#e6f3ff"/><text x="882" y="556" fill="#0b2d5c" font-size="17" font-weight="700">Zaključaj Windows</text>
+<rect x="756" y="37" width="358" height="35" rx="13" fill="#fff0d7" stroke="#e4bd79"/>
+<text x="773" y="60" fill="#875718" font-size="14" font-weight="700">KONCEPT — NIJE SNIMKA APLIKACIJE</text>
+</g></svg>

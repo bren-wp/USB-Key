@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 330" role="img" aria-label="Brendigo USB Key - Windows sigurnost">
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#081e3e"/><stop offset=".64" stop-color="#0b2d5c"/><stop offset="1" stop-color="#087599"/></linearGradient><linearGradient id="usb" x2="1" y2="1"><stop stop-color="#0f6bff"/><stop offset="1" stop-color="#14b8a6"/></linearGradient></defs>
+<rect width="1280" height="330" rx="28" fill="url(#bg)"/>
+<path d="M770 330Q1080 120 1280 238V330Z" fill="#13a5bf" opacity=".18"/>
+<g fill="none" stroke="#4adfe1" opacity=".18"><circle cx="1084" cy="158" r="175" stroke-width="3"/><circle cx="1084" cy="158" r="120" stroke-width="3"/><circle cx="1084" cy="158" r="72" stroke-width="3"/></g>
+<g transform="translate(76 41)">
+<path d="M93 3 184 39 175 128Q159 190 93 237Q27 190 11 128L2 39Z" fill="#0f6bff" stroke="#78e8e9" stroke-width="6"/>
+<path d="M93 22 163 51 157 128Q146 172 93 209Q40 172 29 128L23 51Z" fill="#082a59"/>
+<rect x="75" y="36" width="35" height="60" rx="5" fill="#e6f3ff"/><rect x="81" y="51" width="9" height="9" fill="#0b2d5c"/><rect x="96" y="51" width="9" height="9" fill="#0b2d5c"/>
+<rect x="50" y="81" width="85" height="113" rx="18" fill="url(#usb)" stroke="#a7effb" stroke-width="3"/>
+<path d="M77 130v-17a16 16 0 0 1 32 0v17" stroke="#fff" stroke-width="7" fill="none"/>
+<rect x="70" y="127" width="46" height="43" rx="7" fill="#fff"/><circle cx="93" cy="145" r="5" fill="#0b2d5c"/>
+<path d="M-16 187Q83 257 211 161" stroke="#14b8a6" stroke-width="11" fill="none" stroke-linecap="round"/>
+</g>
+<g font-family="Segoe UI,Arial,sans-serif">
+<text x="310" y="124" font-size="66" font-weight="700" fill="white">Brendigo</text>
+<text x="310" y="194" font-size="72" font-weight="700" fill="#5ce7f6">USB Key</text>
+<text x="315" y="241" font-size="24" fill="#d8edf9">Više USB ključeva. Jedno računalo. Rezervni pristup.</text>
+<rect x="315" y="264" width="194" height="39" rx="20" fill="#0f6bff"/>
+<text x="339" y="290" font-size="18" font-weight="600" fill="white">Windows 10 / 11</text>
+<rect x="525" y="264" width="186" height="39" rx="20" fill="#166f83"/>
+<text x="550" y="290" font-size="18" font-weight="600" fill="#d0fff2">Lokalna obrada</text>
+</g>
+<g transform="translate(914 80)">
+<rect width="242" height="142" rx="13" fill="#d6e9fb"/>
+<rect x="13" y="13" width="216" height="116" rx="6" fill="#0b2d5c"/>
+<path d="M100 36h27v27h-27zM131 36h27v27h-27zM100 67h27v27h-27zM131 67h27v27h-27z" fill="#4fbfff"/>
+<path d="M-18 146h279l19 19H-35Z" fill="#7dabc9"/>
+</g></svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 242" role="img" aria-label="Kako radi Brendigo USB Key">
+<rect width="1200" height="242" rx="20" fill="#eaf3fd"/>
+<g font-family="Segoe UI,Arial,sans-serif" text-anchor="middle">
+<g fill="#fff" stroke="#c8ddeb" stroke-width="2"><rect x="18" y="25" width="327" height="190" rx="18"/><rect x="435" y="25" width="327" height="190" rx="18"/><rect x="850" y="25" width="331" height="190" rx="18"/></g>
+<g fill="#0f6bff"><rect x="127" y="61" width="25" height="53" rx="5"/><rect x="161" y="61" width="25" height="53" rx="5"/><rect x="195" y="61" width="25" height="53" rx="5"/></g>
+<g fill="#0b2d5c"><rect x="133" y="52" width="13" height="17"/><rect x="167" y="52" width="13" height="17"/><rect x="201" y="52" width="13" height="17"/></g>
+<rect x="563" y="54" width="70" height="63" rx="8" fill="#0b2d5c"/><rect x="573" y="64" width="50" height="41" rx="4" fill="#0f6bff"/><path d="M547 120h103l10 10H538Z" fill="#a0bedb"/>
+<path d="m975 85 28 28 51-60" fill="none" stroke="#14b8a6" stroke-width="12" stroke-linecap="round"/>
+<g fill="#0b2d5c" font-weight="700" font-size="23"><text x="182" y="157">Registriraj USB</text><text x="598" y="157">Provjeri prisutnost</text><text x="1015" y="157">Zaključaj po želji</text></g>
+<g fill="#62798d" font-size="17"><text x="182" y="186">Svaki ima zaseban token</text><text x="598" y="186">Lokalno u aplikaciji</text><text x="1015" y="186">Windows prijava ostaje ista</text></g>
+<path d="M365 120h51m-15-12 15 12-15 12M780 120h51m-15-12 15 12-15 12" stroke="#0f6bff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</g></svg>
