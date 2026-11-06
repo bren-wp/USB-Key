@@ -27,6 +27,12 @@ You may keep a copy of the portable EXE on a USB drive and launch it manually **
 
 Closing the main window hides the app to the Windows notification area; it continues monitoring. Double-click the tray icon to reopen it, or use the menu to lock Windows or exit. Fully exiting stops monitoring. Auto-start launches the app directly in the tray.
 
+## Optional: copying the portable application to USB
+
+The **Brendigo-USB-Key-USB-Setup-Kit.zip** on [GitHub Releases](https://github.com/bren-wp/USB-Key/releases) includes Portable.exe, this guide and **Install-To-USB.ps1**. Extract the kit on your Windows computer. The optional script validates a removable drive, asks for confirmation (**DA**), copies the executable and documentation and verifies the copied file's SHA-256 checksum. If PowerShell scripts are blocked by your organization's policy, you may copy the EXE manually instead of bypassing that policy.
+
+The script **does not enroll keys or unlock Windows**. Run the program manually after signing in to Windows, and register each physical USB independently in the application.
+
 ## If your USB is damaged or lost
 
 1. Log in with your regular Windows password or Windows Hello.

@@ -91,6 +91,8 @@ jobs:
           Copy-Item "docs/SETUP-USB-HR.md" "artifacts/usb-kit/"
           Copy-Item "docs/SETUP-USB-EN.md" "artifacts/usb-kit/"
           Copy-Item "docs/TROUBLESHOOTING-HR.md" "artifacts/usb-kit/"
+          Copy-Item "tools/Install-To-USB.ps1" "artifacts/usb-kit/"
+          Copy-Item "artifacts/Brendigo-USB-Key-Portable.exe" "artifacts/usb-kit/"
           "Brendigo USB Key - USB Setup Kit. This package contains only instructions. Register each USB separately. Never copy key.json between USB drives. Windows sign-in still requires your normal Windows password or Hello. Author: Brendigo | brendigo.com" | Set-Content "artifacts/usb-kit/START-HERE.txt" -Encoding utf8
           Compress-Archive -Path artifacts/usb-kit/* -DestinationPath artifacts/Brendigo-USB-Key-USB-Setup-Kit.zip -Force
           $files = @("Brendigo-USB-Key-Portable.exe", "Brendigo-USB-Key-win-x64-portable.zip", "Brendigo-USB-Key-USB-Setup-Kit.zip")

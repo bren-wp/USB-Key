@@ -14,7 +14,8 @@ Autor i brend: Brendigo · https://brendigo.com · MIT
 - Dodatna zaštita od kratkotrajnog nestanka USB uređaja prije automatskog zaključavanja.
 - Rotacija lokalnog sigurnosnog dnevnika.
 - Automatski smoke testovi formata tokena, Windows build i SHA-256 sume.
-- Portable EXE, ZIP s programom i vodičima te USB dokumentacijski komplet na hrvatskom i engleskom.
+- Portable EXE, ZIP s programom i vodičima te USB Setup Kit koji sadrži Portable.exe, HR/EN dokumentaciju i opcionalnu Install-To-USB.ps1 skriptu s provjerom izmjenjivog pogona i SHA-256 kopije.
+- 12 automatizirano provjerenih stvarnih WPF snimki zaslona u README-u i u ZIP paketu.
 
 ## Važno: ograničenja alfa verzije
 

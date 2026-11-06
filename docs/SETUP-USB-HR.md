@@ -24,6 +24,12 @@ Na svakom sticku potreban je samo njegov **zasebno generirani token**. Nije potr
 
 **Ne kopiraj istu datoteku key.json između USB-ova.** Time nastaje klon istoga ključa. Podaci na običnom USB-u mogu se kopirati, pa to nije zaštita usporediva s FIDO2 uređajem.
 
+## Opcionalno: postavljanje portable programa na USB
+
+Najnoviji **Brendigo-USB-Key-USB-Setup-Kit.zip** s [GitHub izdanja](https://github.com/bren-wp/USB-Key/releases) sadrži Portable.exe, upute i skriptu **Install-To-USB.ps1**. Raspakiraj ZIP na Windows računalu, umetni USB stick i po želji pokreni skriptu uz slovo pogona. Skripta provjerava je li pogon izmjenjiv, traži izričitu potvrdu **DA**, kopira EXE i upute te provjerava SHA-256 kopije.
+
+Skripta **ne stvara USB token, ne mijenja Windows prijavu i ne otključava zaključani zaslon**. Program se mora ručno pokrenuti nakon prijave u Windows, a svaki USB zasebno registrirati u aplikaciji. Ako pravila tvog računala ne dopuštaju PowerShell skripte, možeš ručno kopirati Portable.exe bez zaobilaženja tih pravila.
+
 ## Ako se USB pokvari ili izgubi
 
 1. Prijavi se Windows lozinkom ili Hello metodom.

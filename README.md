@@ -84,7 +84,7 @@ Brendigo vizualni sustav koristi tamnoplavu **#0B2D5C**, plavu **#0F6BFF** i tir
 1. Otvori [GitHub Releases](https://github.com/bren-wp/USB-Key/releases) i odaberi najnovije **v0.2.0-alpha** testno izdanje.
 2. Preuzmi **Brendigo-USB-Key-Portable.exe** (izvršnu datoteku) ili **Brendigo-USB-Key-win-x64-portable.zip** (kompletan paket).
 3. Preuzmi **SHA256SUMS.txt** i usporedi SHA-256 kontrolne sume preuzetih datoteka.
-4. Za pripremu više USB stickova preuzmi **Brendigo-USB-Key-USB-Setup-Kit.zip** ili pročitaj vodiče [HR](docs/SETUP-USB-HR.md) i [EN](docs/SETUP-USB-EN.md).
+4. Za pripremu više USB stickova preuzmi **Brendigo-USB-Key-USB-Setup-Kit.zip**. Komplet sadrži **Portable.exe**, hrvatske i engleske upute te opcionalnu **Install-To-USB.ps1** skriptu za kopiranje programa na provjereni izmjenjivi pogon. Token i dalje moraš registrirati unutar aplikacije. Dostupni su i vodiči [HR](docs/SETUP-USB-HR.md) i [EN](docs/SETUP-USB-EN.md).
 5. Za prvo testiranje ostavi **auto-lock isključen** te provjeri da poznaješ Windows lozinku ili Hello PIN.
 
 Aplikacija je self-contained (ne traži zasebnu instalaciju .NET runtimea). **EXE je nepotpisan i namijenjen testiranju**, pa Windows može prikazati sigurnosno upozorenje. Nemoj zaobilaziti poslovne sigurnosne politike. Alternativni [Windows Actions build](https://github.com/bren-wp/USB-Key/actions/workflows/windows-build.yml) sadrži iste vrste testnih datoteka.
