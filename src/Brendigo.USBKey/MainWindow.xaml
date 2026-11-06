@@ -5,7 +5,7 @@
         MinHeight="600" MinWidth="860"
         WindowStartupLocation="CenterScreen" Background="#F2F6FA"
         FontFamily="Segoe UI" FontSize="14">
-  <Grid x:Name="LayoutRoot">
+  <Grid x:Name="LayoutRoot" Background="#F2F6FA">
     <Grid.ColumnDefinitions>
       <ColumnDefinition x:Name="SidebarColumn" Width="242"/>
       <ColumnDefinition Width="*"/>

@@ -18,6 +18,18 @@
       <Setter Property="Padding" Value="18,11"/>
       <Setter Property="BorderThickness" Value="0"/>
       <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="MinHeight" Value="39"/>
+      <!-- All button captions use their actual button foreground color.
+           The global TextBlock style otherwise forces dark text on blue controls. -->
+      <Setter Property="ContentTemplate">
+        <Setter.Value>
+          <DataTemplate>
+            <TextBlock Text="{Binding}" TextWrapping="Wrap" TextAlignment="Center"
+                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                       FontWeight="SemiBold"/>
+          </DataTemplate>
+        </Setter.Value>
+      </Setter>
       <Setter Property="Template">
         <Setter.Value>
           <ControlTemplate TargetType="Button">

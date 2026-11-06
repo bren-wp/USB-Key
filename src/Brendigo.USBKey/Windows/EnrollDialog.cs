@@ -30,7 +30,10 @@ public sealed class EnrollDialog : Window
         Background = new SolidColorBrush(Color.FromRgb(242, 246, 250));
         FontFamily = new FontFamily("Segoe UI");
 
-        var layout = new Grid();
+        var layout = new Grid
+        {
+            Background = new SolidColorBrush(Color.FromRgb(242, 246, 250))
+        };
         layout.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         layout.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
         layout.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
@@ -230,8 +233,13 @@ public sealed class NameDialog : Window
         Background = new SolidColorBrush(Color.FromRgb(242, 246, 250));
         FontFamily = new FontFamily("Segoe UI");
 
+        var root = new Grid
+        {
+            Background = new SolidColorBrush(Color.FromRgb(242, 246, 250))
+        };
         var panel = new StackPanel { Margin = new Thickness(26) };
-        Content = panel;
+        root.Children.Add(panel);
+        Content = root;
 
         panel.Children.Add(new TextBlock
         {
