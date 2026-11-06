@@ -32,6 +32,20 @@ jobs:
       - name: Run USB token smoke tests
         run: dotnet run --project tests/Brendigo.USBKey.Smoke/Brendigo.USBKey.Smoke.csproj --configuration Release
 
+      - name: Render and validate 12 genuine WPF UI screens
+        shell: pwsh
+        run: |
+          dotnet run --project tests/Brendigo.USBKey.Visual/Brendigo.USBKey.Visual.csproj --configuration Release -- artifacts/screenshots
+          if ($LASTEXITCODE -ne 0) { throw "WPF screenshot validation failed" }
+
+      - name: Upload WPF screenshots for visual review
+        uses: actions/upload-artifact@v4
+        with:
+          name: Brendigo-USB-Key-WPF-Screenshots
+          path: artifacts/screenshots/*.png
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Publish portable EXE, ZIP, USB setup kit and checksums
         shell: pwsh
         run: |
