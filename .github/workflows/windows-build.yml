@@ -86,8 +86,14 @@ jobs:
           $tag = "v0.2.0-alpha.$env:GITHUB_RUN_NUMBER"
           gh release create $tag "artifacts/Brendigo-USB-Key-Portable.exe" "artifacts/Brendigo-USB-Key-win-x64-portable.zip" "artifacts/Brendigo-USB-Key-USB-Setup-Kit.zip" "artifacts/SHA256SUMS.txt" --repo "$env:GITHUB_REPOSITORY" --target "$env:GITHUB_SHA" --title "Brendigo USB Key $tag (testna alfa)" --notes-file "docs/RELEASE-NOTES-HR.md" --prerelease --latest=false
           if ($LASTEXITCODE -ne 0) { throw "GitHub prerelease creation failed" }
-          $oldAlpha = gh release view "v0.2.0-alpha.23" --json isPrerelease --jq ".isPrerelease" --repo "$env:GITHUB_REPOSITORY"
-          if ($LASTEXITCODE -eq 0 -and "$oldAlpha".Trim() -eq "false") {
-            gh release edit "v0.2.0-alpha.23" --prerelease --latest=false --repo "$env:GITHUB_REPOSITORY"
-            if ($LASTEXITCODE -ne 0) { throw "Could not mark old alpha as prerelease" }
+          gh release edit $tag --prerelease --latest=false --repo "$env:GITHUB_REPOSITORY"
+          if ($LASTEXITCODE -ne 0) { throw "Could not mark new release as prerelease" }
+          $alphaReleases = gh release list --repo "$env:GITHUB_REPOSITORY" --limit 100 --json tagName,isPrerelease | ConvertFrom-Json
+          if ($LASTEXITCODE -ne 0) { throw "Could not list previous releases" }
+          foreach ($alpha in $alphaReleases) {
+            if ($alpha.tagName -match '^v0\.2\.0-alpha\.[0-9]+
+ -and !$alpha.isPrerelease) {
+              gh release edit $alpha.tagName --prerelease --latest=false --repo "$env:GITHUB_REPOSITORY"
+              if ($LASTEXITCODE -ne 0) { throw "Could not fix previous alpha release flag" }
+            }
           }
