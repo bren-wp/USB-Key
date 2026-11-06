@@ -15,7 +15,7 @@ public partial class App : Application
         {
             _singleInstance.Dispose();
             _singleInstance = null;
-            MessageBox.Show("Brendigo USB Key već je pokrenut.", "Brendigo USB Key",
+            MessageBox.Show("Brendigo USB Key već radi. Otvori ga dvoklikom na ikonu u Windows obavijesnom području.", "Brendigo USB Key",
                 MessageBoxButton.OK, MessageBoxImage.Information);
             Shutdown();
             return;
@@ -40,6 +40,8 @@ public partial class App : Application
             MainWindow = dashboard;
             dashboard.Show();
             dashboard.WindowState = WindowState.Minimized;
+            dashboard.ShowInTaskbar = false;
+            dashboard.Hide();
         }
         else
         {

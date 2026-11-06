@@ -13,6 +13,8 @@ public partial class MainWindow : Window
 {
     private readonly UsbKeyManager _manager;
     private readonly DispatcherTimer _timer;
+    private TrayController? _tray;
+    private bool _exitRequested;
     private string _page = "Dashboard";
 
     public MainWindow()
@@ -33,6 +35,57 @@ public partial class MainWindow : Window
         _timer.Tick += (_, _) => RefreshStatus();
         _timer.Start();
         RefreshStatus();
+        _tray = new TrayController(ShowFromTray, LockFromTray, ExitFromTray);
+        Application.Current.SessionEnding += OnWindowsSessionEnding;
+    }
+
+    private void ShowFromTray()
+    {
+        ShowInTaskbar = true;
+        Show();
+        WindowState = WindowState.Normal;
+        Activate();
+    }
+
+    private void LockFromTray()
+    {
+        if (MessageBox.Show("Zaključati Windows sada? Za povratak će trebati Windows lozinka ili Hello.",
+            "Brendigo USB Key", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+            return;
+
+        try { _manager.LockNow(); }
+        catch (Exception ex) { ShowError("Zaključavanje nije uspjelo", ex); }
+    }
+
+    private void ExitFromTray()
+    {
+        _exitRequested = true;
+        Close();
+    }
+
+    private void OnWindowsSessionEnding(object sender, SessionEndingCancelEventArgs e)
+        => _exitRequested = true;
+
+    protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+    {
+        if (!_exitRequested && _tray != null &&
+            !Application.Current.Dispatcher.HasShutdownStarted)
+        {
+            e.Cancel = true;
+            Hide();
+            _tray.ShowBackgroundHint();
+            return;
+        }
+
+        base.OnClosing(e);
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        Application.Current.SessionEnding -= OnWindowsSessionEnding;
+        _timer.Stop();
+        _tray?.Dispose();
+        base.OnClosed(e);
     }
 
     private void Nav_Click(object sender, RoutedEventArgs e)
