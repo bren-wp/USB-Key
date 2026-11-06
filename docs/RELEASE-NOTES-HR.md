@@ -15,12 +15,12 @@ Autor i brend: Brendigo · https://brendigo.com · MIT
 - Rotacija lokalnog sigurnosnog dnevnika.
 - Automatski smoke testovi formata tokena, Windows build i SHA-256 sume.
 - Portable EXE, ZIP s programom i vodičima te USB Setup Kit koji sadrži Portable.exe, HR/EN dokumentaciju i opcionalnu Install-To-USB.ps1 skriptu s provjerom izmjenjivog pogona i SHA-256 kopije.
-- 12 automatizirano provjerenih stvarnih WPF snimki zaslona u README-u i u ZIP paketu.
+- 13 automatizirano provjerenih stvarnih WPF snimki zaslona i tri dodatne varijante u README-u i u ZIP paketu.
 
 - Ponašanje auto-locka dodatno zaštićeno od neuspjelih USB očitanja; samo tri uzastopne pouzdane provjere odsutnosti mogu zatražiti zaključavanje.
 - Uvedena stroža validacija lokalnog DPAPI registra i ograničeno čitanje tokena s izmjenjivog medija.
 - Statusi USB ključeva na nadzornoj ploči prikazuju se zasebno; dodane su kontrole i provjera autostart lokacije.
-- Provjereni WPF callbackovi, 30 sigurnosnih smoke testova i 12 stvarnih CI-renderiranih prikaza aplikacije.
+- Provjereni WPF callbackovi, 30 sigurnosnih smoke testova i 13 stvarnih CI-renderiranih prikaza aplikacije uz tri varijante manjih prozora i DPI skaliranja.
 
 - Ujednačene WPF pozadine i kontrast gumba te bolje ponašanje Dashboard kartica na manjim prozorima.
 - Security Log omogućuje lokalno pretraživanje, osvježavanje i izvoz uz upozorenje o privatnosti.
