@@ -119,23 +119,36 @@ public sealed class AppPasswordService
     private Credential ReadCredential()
     {
         byte[] cipher = File.ReadAllBytes(_path);
-        if (cipher.Length is < 16 or > MaxCredentialSize)
-            throw new InvalidDataException("Neispravna datoteka pristupa aplikaciji.");
-        byte[] clear = ProtectedData.Unprotect(cipher, null, DataProtectionScope.CurrentUser);
+        byte[]? clear = null;
+        byte[]? salt = null;
+        byte[]? hash = null;
         try
         {
+            if (cipher.Length is < 16 or > MaxCredentialSize)
+                throw new InvalidDataException("Neispravna datoteka pristupa aplikaciji.");
+            clear = ProtectedData.Unprotect(cipher, null, DataProtectionScope.CurrentUser);
             Credential record = JsonSerializer.Deserialize<Credential>(clear)
                 ?? throw new InvalidDataException("Neispravni pristupni podaci.");
             if (record.Format != 1 || record.Iterations != WorkFactor ||
-                record.Salt.Length != 44 || record.Hash.Length != 44 ||
-                Convert.FromBase64String(record.Salt).Length != 32 ||
-                Convert.FromBase64String(record.Hash).Length != 32)
-                throw new InvalidDataException("Nepodržan ili neispravan format pristupnih podataka.");
+                record.Salt is null || record.Hash is null ||
+                record.Salt.Length != 44 || record.Hash.Length != 44)
+                throw new InvalidDataException("Nepodržan format pristupnih podataka.");
+
+            salt = Convert.FromBase64String(record.Salt);
+            hash = Convert.FromBase64String(record.Hash);
+            if (salt.Length != 32 || hash.Length != 32)
+                throw new InvalidDataException("Neispravan oblik sigurnosnog zapisa.");
             return record;
+        }
+        catch (Exception ex) when (ex is JsonException or FormatException)
+        {
+            throw new InvalidDataException("Oštećen zapis lozinke aplikacije.", ex);
         }
         finally
         {
-            CryptographicOperations.ZeroMemory(clear);
+            if (salt != null) CryptographicOperations.ZeroMemory(salt);
+            if (hash != null) CryptographicOperations.ZeroMemory(hash);
+            if (clear != null) CryptographicOperations.ZeroMemory(clear);
             CryptographicOperations.ZeroMemory(cipher);
         }
     }
