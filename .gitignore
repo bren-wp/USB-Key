@@ -1,0 +1,21 @@
+# .NET / Visual Studio
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+*.cache
+TestResults/
+artifacts/
+out/
+*.pdb
+*.log
+
+# Secrets / device credentials: NEVER commit a real USB token or local registry
+**/.brendigo-usb-key/
+**/registry.dat
+**/key.json
+**/events.log
+*.pfx
+*.snk
+*.key

@@ -1,0 +1,43 @@
+name: Windows Build
+
+on:
+  push:
+    branches: [main, "feat/**"]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore
+        run: dotnet restore src/Brendigo.USBKey/Brendigo.USBKey.csproj
+      - name: Compile WPF
+        run: dotnet build src/Brendigo.USBKey/Brendigo.USBKey.csproj --configuration Release --no-restore -warnaserror
+      - name: Publish self-contained portable Windows app
+        shell: pwsh
+        run: |
+          dotnet publish src/Brendigo.USBKey/Brendigo.USBKey.csproj --configuration Release --runtime win-x64 --self-contained true --output artifacts/win-x64 -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:DebugType=None -p:DebugSymbols=false
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Compress-Archive -Path artifacts/win-x64/* -DestinationPath artifacts/Brendigo-USB-Key-win-x64-portable.zip
+          Get-FileHash artifacts/Brendigo-USB-Key-win-x64-portable.zip -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  Brendigo-USB-Key-win-x64-portable.zip" } | Out-File artifacts/SHA256SUMS.txt -Encoding utf8
+      - name: Upload unsigned Windows build
+        uses: actions/upload-artifact@v4
+        with:
+          name: Brendigo-USB-Key-win-x64-unsigned
+          path: |
+            artifacts/Brendigo-USB-Key-win-x64-portable.zip
+            artifacts/SHA256SUMS.txt
+          if-no-files-found: error

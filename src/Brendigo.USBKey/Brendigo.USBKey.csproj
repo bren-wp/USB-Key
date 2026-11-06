@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Brendigo.USBKey</AssemblyName>
+    <RootNamespace>Brendigo.USBKey</RootNamespace>
+    <ApplicationIcon>..\..\assets\brendigo-usb-key.ico</ApplicationIcon>
+    <Version>0.1.0</Version>
+    <Authors>Brendigo</Authors>
+    <Company>Brendigo</Company>
+    <Product>Brendigo USB Key</Product>
+    <Description>Lokalno upravljanje USB sigurnosnim ključevima za Windows.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <Resource Include="..\..\assets\brendigo-usb-key.ico" Link="Assets\brendigo-usb-key.ico" />
+  </ItemGroup>
+</Project>
