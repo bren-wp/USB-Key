@@ -81,4 +81,39 @@ finally
     if (Directory.Exists(welcomeFolder)) Directory.Delete(welcomeFolder, recursive: true);
 }
 
+// A full export must include the last rotation, and must not overwrite either source.
+string logFolder = Path.Combine(Path.GetTempPath(), "brendigo-log-test-" + Guid.NewGuid().ToString("N"));
+Directory.CreateDirectory(logFolder);
+try
+{
+    string current = Path.Combine(logFolder, "events.log");
+    string archive = current + ".previous.log";
+    File.WriteAllText(archive, "2026-11-06 | Arhiva: prethodni događaj\n");
+    File.WriteAllText(current, "2026-11-07 | Novi događaj\n");
+    string recent = SecurityLogStore.ReadRecent(current);
+    Check(recent.IndexOf("Novi događaj", StringComparison.Ordinal) <
+          recent.IndexOf("prethodni događaj", StringComparison.Ordinal),
+          "Security Log displays newest retained events first");
+    Check(SecurityLogStore.ReadRecent(current, 1).Contains("Novi događaj"),
+          "Security Log enforces recent row limit");
+    string output = Path.Combine(logFolder, "izvoz.txt");
+    int exported = SecurityLogStore.ExportRetained(current, output);
+    string all = File.ReadAllText(output);
+    Check(exported == 2 && all.Contains("prethodni događaj") &&
+          all.Contains("Novi događaj"), "Export includes current and retained archived events");
+    Check(all.IndexOf("prethodni događaj", StringComparison.Ordinal) <
+          all.IndexOf("Novi događaj", StringComparison.Ordinal),
+          "Export preserves chronological order");
+    bool rejectedOverwrite = false;
+    try { SecurityLogStore.ExportRetained(current, archive); }
+    catch (IOException) { rejectedOverwrite = true; }
+    Check(rejectedOverwrite, "Export cannot overwrite the source log archive");
+    Check(File.ReadAllText(archive).Contains("prethodni događaj"),
+          "Rejected export does not modify the archive");
+}
+finally
+{
+    Directory.Delete(logFolder, recursive: true);
+}
+
 Console.WriteLine($"All {checks} USB security smoke checks passed.");

@@ -257,7 +257,7 @@
               <WrapPanel Margin="0,0,0,12">
                 <Button Content="Osvježi" Click="RefreshLog_Click"
                         Style="{StaticResource SecondaryButton}" Margin="0,0,9,9"/>
-                <Button Content="Izvezi u TXT" Click="ExportLog_Click"
+                <Button Content="Izvezi sačuvani dnevnik" Click="ExportLog_Click"
                         Style="{StaticResource PrimaryButton}" Margin="0,0,9,9"/>
                 <Button Content="Otvori mapu" Click="OpenDataFolder_Click"
                         Style="{StaticResource SecondaryButton}" Margin="0,0,9,9"/>

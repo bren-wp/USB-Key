@@ -331,7 +331,8 @@ public partial class MainWindow : Window
                 return;
             }
             if (MessageBox.Show(this,
-                "Izvoz sadrži nazive USB ključeva i vremena događaja. " +
+                "Izvoz uključuje i prethodnu arhivu sačuvanih događaja, a ne samo " +
+                "250 redaka na ekranu. Sadrži nazive USB ključeva i vremena događaja. " +
                 "TXT datoteka neće biti šifrirana. Želiš li nastaviti?",
                 "Privatnost izvoza", MessageBoxButton.YesNo,
                 MessageBoxImage.Warning) != MessageBoxResult.Yes) return;
@@ -346,8 +347,10 @@ public partial class MainWindow : Window
                 OverwritePrompt = true
             };
             if (dialog.ShowDialog(this) != true) return;
-            File.WriteAllText(dialog.FileName, _rawEvents, System.Text.Encoding.UTF8);
-            MessageBox.Show(this, "Dnevnik je izvezen.", "Brendigo USB Key",
+            int exported = _manager.ExportEvents(dialog.FileName);
+            MessageBox.Show(this,
+                $"Izvezeno je {exported} sačuvanih događaja (uključujući posljednju arhivu).",
+                "Brendigo USB Key",
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch (Exception ex) { ShowError("Izvoz dnevnika nije uspio", ex); }

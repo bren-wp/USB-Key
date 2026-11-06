@@ -233,11 +233,11 @@ public sealed class UsbKeyManager
             throw new InvalidOperationException("Windows nije mogao zaključati sesiju.");
     }
 
-    public string ReadEvents()
-    {
-        if (!File.Exists(_eventsPath)) return "Još nema sigurnosnih događaja.";
-        return string.Join(Environment.NewLine, File.ReadLines(_eventsPath).TakeLast(250).Reverse());
-    }
+    public string ReadEvents() => SecurityLogStore.ReadRecent(_eventsPath);
+
+    /// <summary>Export all currently retained events, not only the 250 visible rows.</summary>
+    public int ExportEvents(string destination) =>
+        SecurityLogStore.ExportRetained(_eventsPath, destination);
 
     private RegistryState Load()
     {
