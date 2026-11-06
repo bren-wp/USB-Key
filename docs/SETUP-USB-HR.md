@@ -34,6 +34,10 @@ Na svakom sticku potreban je samo njegov **zasebno generirani token**. Nije potr
 
 Opoziv na računalu ne briše automatski datoteku na sticku. BitLocker recovery key nije zamjena za Windows lozinku i treba se čuvati odvojeno.
 
+## Rad u pozadini
+
+Nakon prvog pokretanja možeš koristiti Windows obavijesno područje (system tray). Zatvaranjem glavnog prozora tipkom X aplikacija ostaje pokrenuta i nastavlja USB provjere; desnim klikom na njezinu ikonu odaberi **Zatvori aplikaciju** za potpuno gašenje. Ako uključiš automatsko pokretanje u Windowsu, prijava pokreće aplikaciju u pozadini, bez obveznog prolaska uvodnim vodičem.
+
 ## Rješavanje poteškoća
 
 - **USB nije na popisu:** Provjeri prikazuje li ga Windows kao spreman *Removable* pogon, je li podržan i može li se na njega pisati. Neki vanjski diskovi označeni su kao *Fixed* i možda se neće prikazati.

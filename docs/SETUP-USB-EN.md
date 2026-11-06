@@ -23,6 +23,10 @@ Use Windows 10 or 11 x64. Check that your regular Windows password or Windows He
 
 You may keep a copy of the portable EXE on a USB drive and launch it manually **after logging into Windows**. Windows does not automatically run it on the locked sign-in screen. The USB token is data, not a Windows login credential.
 
+## Background monitoring and system tray
+
+Closing the main window hides the app to the Windows notification area; it continues monitoring. Double-click the tray icon to reopen it, or use the menu to lock Windows or exit. Fully exiting stops monitoring. Auto-start launches the app directly in the tray.
+
 ## If your USB is damaged or lost
 
 1. Log in with your regular Windows password or Windows Hello.

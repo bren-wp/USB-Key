@@ -5,6 +5,9 @@ Autor i brend: Brendigo · https://brendigo.com · MIT
 ## Promjene
 
 - Novi Splash/Welcome vodič s četiri interaktivna koraka i originalnom ikonom aplikacije.
+- Redizajnirani dijalozi za registraciju i preimenovanje USB-a, uključujući osvježavanje popisa USB pogona.
+- Windows system tray s nastavkom nadzora pri zatvaranju prozora i eksplicitnom naredbom za izlaz.
+- PerMonitorV2 DPI manifest za kvalitetnije skaliranje sučelja na više zaslona.
 - Naziv Windows izvršne datoteke usklađen s namjenom testiranja: Brendigo-USB-Key-Portable.exe.
 - USB token provjerava se kroz strožu validaciju JSON-a i kanonskog Base64 zapisa.
 - Osnovna zaštita od preusmjeravanja mapa i datoteka na USB-u (reparse-point provjera).

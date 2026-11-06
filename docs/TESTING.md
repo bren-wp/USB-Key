@@ -21,6 +21,16 @@
 - [ ] Standardni korisnik bez administratorskih ovlasti može upravljati vlastitim USB-ovima.
 - [ ] ZIP i zapisnici ne sadrže tokene i Windows vjerodajnice.
 
+## Testiranje system traya na stvarnom Windowsu
+
+- [ ] Nakon pritiska X aplikacija ostaje vidljiva u Windows obavijesnom području.
+- [ ] Dvoklikom na ikonu ponovno se otvara glavni prozor.
+- [ ] Nadzor USB-a nastavlja raditi kada je prozor skriven.
+- [ ] Naredba Zatvori aplikaciju iz traya završava proces i nadzor.
+- [ ] Autostart preskače uvodni vodič i ostavlja aplikaciju u trayu.
+- [ ] Windows odjava i gašenje nisu blokirani skrivanjem prozora.
+- [ ] Test svih relevantnih ekrana na 100%, 125%, 150% i 200% DPI.
+
 ## Automatizacija
 
 GitHub Actions izvodi WPF Release build, smoke testove USB tokena i generira nepotpisani Portable EXE, ZIP, USB setup kit i SHA-256 sume; na main grani pokušava objaviti GitHub prerelease. Automatski build nije zamjena za testiranje na fizičkom Windows računalu ili neovisnu sigurnosnu provjeru.

@@ -11,6 +11,7 @@ UsbKeyManager provjerava lokalni registar enkriptiran DPAPI-jem. Opcionalno pozi
 - **TokenCodec**: zaseban strogo validiran format nasumičnog USB tokena i SHA-256 dokaza.
 - **UsbKeyManager**: tokeni po sticku, SHA-256 dokaz, lokalni popis povjerenja, praćenje, opoziv, zapisnik i opcionalno zaključavanje.
 - **StartupService**: HKCU Run uz argument --autostart, koji preskače uvod i odmah uključuje nadzor nakon Windows prijave.
+- **TrayController**: Windows obavijesno područje s otvaranjem, ručnim zaključavanjem i izričitim izlazom; nije servis.
 - **EnrollDialog**: odabir izmjenjivog USB pogona i naziva.
 
 Datoteka na USB-u ne izvršava se automatski. Program ne zahtijeva administratorske ovlasti.

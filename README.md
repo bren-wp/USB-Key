@@ -62,6 +62,12 @@ Aplikacija je self-contained (ne traži zasebnu instalaciju .NET runtimea). **EX
 
 **Napomena za USB:** Program se pokreće **na računalu nakon Windows prijave**. USB stick sadrži lokalni token, a ne samostalni Windows prijavni program. Možeš na sticku držati kopiju portable aplikacije, ali umetanje USB-a neće automatski pokrenuti aplikaciju na zaključanom sustavu.
 
+## Rad u Windows obavijesnom području
+
+Kad zatvoriš glavni prozor tipkom **X**, aplikacija ostaje aktivna u **system trayu** i nastavlja lokalni USB nadzor. Dvoklikom na Brendigo ikonu ponovno otvaraš nadzornu ploču. Desnim klikom možeš odabrati **Otvori**, **Zaključaj Windows** ili **Zatvori aplikaciju**. Potpuno zatvaranje prekida nadzor i opcionalno automatsko zaključavanje. Pri Windows autostartu aplikacija preskače uvodni vodič i pokreće se u obavijesnom području.
+
+**Ovo nije privilegirani Windows servis:** korisnik ili drugi proces koji može zatvoriti aplikaciju može prekinuti nadzor.
+
 ## Priprema više USB stickova
 
 | USB | Naziv | Preporučena uloga |
