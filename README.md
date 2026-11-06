@@ -122,6 +122,8 @@ Kad zatvoriš glavni prozor tipkom **X**, aplikacija ostaje aktivna u **system t
 
 ## Sigurnost i oporavak
 
+Automatsko zaključavanje zahtijeva tri uzastopne **pouzdane** provjere odsutnosti svih USB ključeva. Ako USB očitanje ne uspije, nadzor neće taj rezultat tretirati kao dokaz uklanjanja uređaja. Ovo je sigurnosna pogodnost, ne zamjena za Windows prijavu.
+
 - Svaki stick dobiva zaseban nasumičan token od **256 bita**.
 - Lokalni registar zaštićen je **Windows DPAPI-jem** u kontekstu prijavljenog korisnika.
 - Token na običnom USB sticku **nije zaštićen od kopiranja**.

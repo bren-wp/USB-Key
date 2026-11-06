@@ -22,6 +22,12 @@ Autor i brend: Brendigo · https://brendigo.com · MIT
 - Statusi USB ključeva na nadzornoj ploči prikazuju se zasebno; dodane su kontrole i provjera autostart lokacije.
 - Provjereni WPF callbackovi, 30 sigurnosnih smoke testova i 12 stvarnih CI-renderiranih prikaza aplikacije.
 
+- Ujednačene WPF pozadine i kontrast gumba te bolje ponašanje Dashboard kartica na manjim prozorima.
+- Security Log omogućuje lokalno pretraživanje, osvježavanje i izvoz uz upozorenje o privatnosti.
+- USB opoziv ima posebno dizajniran dijalog s obveznom izričitom potvrdom.
+- Uvedene su provjere manjeg prozora, alternativnog WPF DPI-ja i rada potvrde opoziva.
+- CI se sigurnije nosi s istovremenim nadogradnjama stvarnih WPF snimki na main.
+
 ## Važno: ograničenja alfa verzije
 
 **USB ne otključava Windows zaslon za prijavu.** Program podržava registraciju, detekciju i opcionalno zaključavanje već otvorene sesije. Windows lozinka/Hello ostaju rezervni način prijave. Obični USB token moguće je kopirati. FIDO2 i Credential Provider nisu implementirani.

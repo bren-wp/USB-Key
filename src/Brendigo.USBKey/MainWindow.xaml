@@ -282,7 +282,7 @@
                         ToolTip="Zaključava već otključanu Windows sesiju. Ne može otključati Windows prijavu."
                         FontSize="15" Margin="0,0,0,9"/>
               <TextBlock TextWrapping="Wrap" Foreground="#597392" Margin="22,0,0,24"
-                         Text="Radi samo dok je aplikacija pokrenuta. Zaključavanje se aktivira tek nakon što je u toj sesiji prepoznat ispravan USB. Tri uzastopna neuspješna skeniranja pokreću zaključavanje."/>
+                         Text="Radi samo dok je aplikacija pokrenuta. Zaključavanje se aktivira tek nakon što je u toj sesiji prepoznat ispravan USB. Tri uzastopne pouzdane provjere bez USB ključa mogu pokrenuti zaključavanje; greška čitanja neće."/>
               <CheckBox x:Name="StartupCheck" Content="Pokreni Brendigo USB Key nakon prijave u Windows"
                         AutomationProperties.Name="Automatski pokreni Brendigo USB Key nakon Windows prijave"
                         ToolTip="Automatsko pokretanje radi samo sa stalne lokalne lokacije aplikacije."
