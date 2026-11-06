@@ -9,5 +9,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/Brendigo.USBKey/Brendigo.USBKey.csproj" />
+    <Resource Include="../../assets/brendigo-usb-key.ico" Link="Assets/brendigo-usb-key.ico" />
   </ItemGroup>
 </Project>
