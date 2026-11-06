@@ -17,7 +17,10 @@ public partial class MainWindow : Window
     private bool _exitRequested;
     private string _page = "Dashboard";
 
-    public MainWindow()
+    public MainWindow() : this(visualPreview: false) { }
+
+    // Only used by the Windows visual regression runner; no tray or USB polling.
+    public MainWindow(bool visualPreview)
     {
         InitializeComponent();
         try { _manager = new UsbKeyManager(); }
@@ -34,10 +37,20 @@ public partial class MainWindow : Window
         SizeChanged += (_, _) => UpdateResponsiveLayout();
         _timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(3) };
         _timer.Tick += (_, _) => RefreshStatus();
-        _timer.Start();
-        RefreshStatus();
-        _tray = new TrayController(ShowFromTray, LockFromTray, ExitFromTray);
-        Application.Current.SessionEnding += OnWindowsSessionEnding;
+        if (!visualPreview)
+        {
+            _timer.Start();
+            RefreshStatus();
+            _tray = new TrayController(ShowFromTray, LockFromTray, ExitFromTray);
+            Application.Current.SessionEnding += OnWindowsSessionEnding;
+        }
+        else
+        {
+            RegisteredCount.Text = _manager.Registered.Count.ToString();
+            ConnectedCount.Text = "0";
+            AutoLockState.Text = _manager.AutoLock ? "Uključeno" : "Isključeno";
+            StatusMessage.Text = "Nema priključenih USB ključeva na testnom računalu.";
+        }
     }
 
     private void ShowFromTray()
