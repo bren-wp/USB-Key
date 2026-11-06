@@ -91,8 +91,7 @@ jobs:
           $alphaReleases = gh release list --repo "$env:GITHUB_REPOSITORY" --limit 100 --json tagName,isPrerelease | ConvertFrom-Json
           if ($LASTEXITCODE -ne 0) { throw "Could not list previous releases" }
           foreach ($alpha in $alphaReleases) {
-            if ($alpha.tagName -match '^v0\.2\.0-alpha\.[0-9]+
- -and !$alpha.isPrerelease) {
+            if ($alpha.tagName.StartsWith("v0.2.0-alpha.") -and -not $alpha.isPrerelease) {
               gh release edit $alpha.tagName --prerelease --latest=false --repo "$env:GITHUB_REPOSITORY"
               if ($LASTEXITCODE -ne 0) { throw "Could not fix previous alpha release flag" }
             }
