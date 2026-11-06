@@ -185,7 +185,9 @@ public sealed class UsbKeyManager
                 bool accepted = CryptographicOperations.FixedTimeEquals(expected, actual);
                 CryptographicOperations.ZeroMemory(actual);
                 CryptographicOperations.ZeroMemory(expected);
-                if (accepted) connected.Add(new ConnectedKey(key.Id, key.Name, root));
+                // Identical cloned token files must never appear as distinct physical keys.
+                if (accepted && !connected.Any(existing => existing.Id == key.Id))
+                    connected.Add(new ConnectedKey(key.Id, key.Name, root));
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException
                 or JsonException or FormatException or CryptographicException
@@ -298,12 +300,16 @@ public sealed class UsbKeyManager
             ?? throw new IOException("Neispravna putanja USB tokena.");
         EnsureSafePaths(directory, path);
         if (!File.Exists(path)) return null;
-        var info = new FileInfo(path);
-        if (info.Length is < 10 or > TokenCodec.MaxFileBytes) return null;
-
-        byte[] bytes = File.ReadAllBytes(path);
+        // Read only the strictly capped amount, even if an untrusted USB file changes
+        // size between metadata lookup and reading. FileShare.Read avoids write races.
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read,
+            FileShare.Read, bufferSize: 4096, FileOptions.SequentialScan);
+        if (stream.Length is < 10 or > TokenCodec.MaxFileBytes) return null;
+        byte[] bytes = new byte[checked((int)stream.Length)];
         try
         {
+            stream.ReadExactly(bytes);
+            if (stream.ReadByte() != -1) return null;
             return TokenCodec.TryParse(bytes, out var token) ? token : null;
         }
         finally { CryptographicOperations.ZeroMemory(bytes); }

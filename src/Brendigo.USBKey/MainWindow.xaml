@@ -121,7 +121,27 @@
                 <TextBlock x:Name="StatusMessage" Text="Provjera USB uređaja..."
                            TextWrapping="Wrap" Foreground="#597392" Margin="0,0,0,14"/>
                 <ListBox x:Name="RecentKeys" BorderThickness="0" Background="Transparent"
-                         DisplayMemberPath="Name" MinHeight="130"/>
+                         MinHeight="130" AutomationProperties.Name="Sažetak USB ključeva">
+                  <ListBox.ItemTemplate>
+                    <DataTemplate>
+                      <Grid Margin="2,7,4,7">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="*"/>
+                          <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                          <TextBlock Text="{Binding Name}" FontWeight="SemiBold"
+                                     Foreground="#0B2D5C" FontSize="14"/>
+                          <TextBlock Text="{Binding LastSeen}" Foreground="#6B839D" FontSize="11"
+                                     Margin="0,4,0,0"/>
+                        </StackPanel>
+                        <TextBlock Grid.Column="1" Text="{Binding Status}" Margin="12,0,0,0"
+                                   VerticalAlignment="Center" FontSize="12"
+                                   Foreground="#0B776A"/>
+                      </Grid>
+                    </DataTemplate>
+                  </ListBox.ItemTemplate>
+                </ListBox>
               </StackPanel>
             </Border>
             <Border Grid.Column="1" Style="{StaticResource Card}" Margin="0,0,0,12">
@@ -252,7 +272,11 @@
                       Style="{StaticResource SecondaryButton}" HorizontalAlignment="Left"
                       Margin="0,0,0,17"/>
               <TextBlock Text="Autor: Brendigo" Margin="0,0,0,4"/>
-              <TextBlock Text="Web: https://brendigo.com" Margin="0,0,0,14"/>
+              <TextBlock Margin="0,0,0,14">
+                 <Run Text="Web: "/>
+                 <Hyperlink NavigateUri="https://brendigo.com"
+                            RequestNavigate="OpenBrendigoWebsite_Click">brendigo.com</Hyperlink>
+               </TextBlock>
               <TextBlock TextWrapping="Wrap"
                          Text="Windows aplikacija za lokalnu registraciju i provjeru USB ključeva te opcionalno zaključavanje aktivne sesije. Projekt je u razvoju. Nema integraciju s Windows Credential Providerom, FIDO2 prijavom ili Windowsovim zaslonom za prijavu."/>
             </StackPanel>

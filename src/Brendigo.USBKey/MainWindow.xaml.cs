@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.Windows.Navigation;
 using Brendigo.USBKey.Models;
 using Brendigo.USBKey.Services;
 using Brendigo.USBKey.Windows;
@@ -318,6 +319,13 @@ public partial class MainWindow : Window
             ShowError("Spremanje postavki nije uspjelo",
                 new InvalidOperationException(ex.Message + details, ex));
         }
+    }
+
+    private void OpenBrendigoWebsite_Click(object sender, RequestNavigateEventArgs e)
+    {
+        try { Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true }); }
+        catch (Exception ex) { ShowError("Nije moguće otvoriti Brendigo web stranicu", ex); }
+        e.Handled = true;
     }
 
     private void ShowWelcome_Click(object sender, RoutedEventArgs e)

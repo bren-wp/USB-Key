@@ -10,8 +10,12 @@ public static class StartupService
 
     public static bool IsEnabled()
     {
+        string? executable = Environment.ProcessPath;
+        if (string.IsNullOrWhiteSpace(executable)) return false;
         using var key = Registry.CurrentUser.OpenSubKey(RunKey, writable: false);
-        return key?.GetValue(ValueName) is string;
+        string? stored = key?.GetValue(ValueName) as string;
+        return string.Equals(stored, "\"" + executable + "\" --autostart",
+            StringComparison.OrdinalIgnoreCase);
     }
 
     public static void SetEnabled(bool enabled)
@@ -32,6 +36,12 @@ public static class StartupService
         if (!supportedName)
             throw new InvalidOperationException(
                 "Automatsko pokretanje omogućite tek u objavljenoj Windows aplikaciji.");
+        string root = Path.GetPathRoot(executable) ??
+            throw new IOException("Nije moguće utvrditi lokaciju izvršne datoteke.");
+        DriveType driveType = new DriveInfo(root).DriveType;
+        if (driveType is DriveType.Removable or DriveType.Network)
+            throw new InvalidOperationException(
+                "Automatsko pokretanje zahtijeva stalnu lokalnu lokaciju aplikacije, a ne USB ili mrežni disk.");
         using var run = Registry.CurrentUser.CreateSubKey(RunKey);
         run.SetValue(ValueName, "\"" + executable + "\" --autostart", RegistryValueKind.String);
     }
