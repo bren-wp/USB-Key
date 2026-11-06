@@ -215,6 +215,8 @@ public sealed class EnrollDialog : Window
 
 public sealed class NameDialog : Window
 {
+    private static readonly Brush Navy = new SolidColorBrush(Color.FromRgb(11, 45, 92));
+    private static readonly Brush Muted = new SolidColorBrush(Color.FromRgb(81, 112, 145));
     private readonly TextBox _name;
     public string NewName => _name.Text.Trim();
 
