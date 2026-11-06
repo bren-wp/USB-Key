@@ -262,28 +262,62 @@ public partial class MainWindow : Window
 
     private void SaveSettings_Click(object sender, RoutedEventArgs e)
     {
+        bool originalAutoLock = _manager.AutoLock;
+        bool originalStartup = StartupService.IsEnabled();
+        bool desiredAutoLock = AutoLockCheck.IsChecked == true;
+        bool desiredStartup = StartupCheck.IsChecked == true;
+
+        if (desiredAutoLock && !originalAutoLock &&
+            MessageBox.Show(this,
+                "Potvrdi da znaš Windows lozinku ili Hello PIN. USB trenutno ne može " +
+                "otključati zaslon za prijavu. Automatsko zaključavanje reagira samo " +
+                "dok Brendigo USB Key radi. Želiš li uključiti zaštitu?",
+                "Sigurnosna potvrda", MessageBoxButton.YesNo,
+                MessageBoxImage.Warning) != MessageBoxResult.Yes)
+        {
+            AutoLockCheck.IsChecked = originalAutoLock;
+            StartupCheck.IsChecked = originalStartup;
+            return;
+        }
+
         try
         {
-            if (AutoLockCheck.IsChecked == true && !_manager.AutoLock)
-            {
-                if (MessageBox.Show(this,
-                    "Prije uključivanja potvrdi da znaš svoju Windows lozinku ili Hello PIN. " +
-                    "Aplikacija zaključava sesiju nakon uklanjanja zadnjeg aktivnog USB ključa, " +
-                    "ali ga još NE može koristiti za otključavanje Windows prijave.\n\nUključiti?",
-                    "Sigurnosna potvrda", MessageBoxButton.YesNo,
-                    MessageBoxImage.Warning) != MessageBoxResult.Yes)
-                {
-                    AutoLockCheck.IsChecked = false;
-                    return;
-                }
-            }
-            StartupService.SetEnabled(StartupCheck.IsChecked == true);
-            _manager.AutoLock = AutoLockCheck.IsChecked == true;
+            if (originalAutoLock != desiredAutoLock)
+                _manager.AutoLock = desiredAutoLock;
+            if (originalStartup != desiredStartup)
+                StartupService.SetEnabled(desiredStartup);
+
             RefreshStatus();
             MessageBox.Show(this, "Postavke su spremljene.", "Brendigo USB Key",
                 MessageBoxButton.OK, MessageBoxImage.Information);
         }
-        catch (Exception ex) { ShowError("Spremanje postavki nije uspjelo", ex); }
+        catch (Exception ex)
+        {
+            // Best-effort rollback if the second setting could not be written.
+            // Always reflect actual persisted values rather than the requested ones.
+            var rollbackErrors = new List<string>();
+            try
+            {
+                if (_manager.AutoLock != originalAutoLock)
+                    _manager.AutoLock = originalAutoLock;
+            }
+            catch (Exception rollback) { rollbackErrors.Add(rollback.Message); }
+            try
+            {
+                if (StartupService.IsEnabled() != originalStartup)
+                    StartupService.SetEnabled(originalStartup);
+            }
+            catch (Exception rollback) { rollbackErrors.Add(rollback.Message); }
+
+            AutoLockCheck.IsChecked = _manager.AutoLock;
+            try { StartupCheck.IsChecked = StartupService.IsEnabled(); }
+            catch { StartupCheck.IsChecked = originalStartup; }
+
+            string details = rollbackErrors.Count == 0 ? "" :
+                "\n\nDio promjena nije bilo moguće vratiti:\n" + string.Join("\n", rollbackErrors);
+            ShowError("Spremanje postavki nije uspjelo",
+                new InvalidOperationException(ex.Message + details, ex));
+        }
     }
 
     private void ShowWelcome_Click(object sender, RoutedEventArgs e)
