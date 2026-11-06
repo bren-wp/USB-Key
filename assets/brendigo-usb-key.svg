@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Brendigo USB Key shield icon">
+  <defs>
+    <linearGradient id="shield" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0F6BFF"/>
+      <stop offset="1" stop-color="#0B2D5C"/>
+    </linearGradient>
+    <linearGradient id="stick" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2EAFFA"/>
+      <stop offset="1" stop-color="#0B2D5C"/>
+    </linearGradient>
+  </defs>
+  <path d="M128 15 224 53 215 145 Q205 202 128 244 Q51 202 41 145 L32 53 Z" fill="url(#shield)" stroke="#65DCE5" stroke-width="7"/>
+  <path d="M128 35 201 65 192 140 Q185 180 128 218 Q71 180 64 140 L55 65 Z" fill="#071B39" opacity=".55"/>
+  <g transform="translate(83 48) rotate(12 45 82)">
+    <rect x="25" y="0" width="40" height="53" rx="5" fill="#F2F6FA"/>
+    <rect x="30" y="15" width="10" height="8" rx="1" fill="#0B2D5C"/>
+    <rect x="49" y="15" width="10" height="8" rx="1" fill="#0B2D5C"/>
+    <rect x="9" y="43" width="72" height="117" rx="17" fill="url(#stick)" stroke="#79F5F1" stroke-width="4"/>
+    <path d="M34 91 v-11 a11 11 0 0 1 22 0 v11" fill="none" stroke="#FFF" stroke-width="8" stroke-linecap="round"/>
+    <rect x="29" y="88" width="33" height="31" rx="6" fill="#FFF"/>
+    <circle cx="45" cy="101" r="4" fill="#0B2D5C"/>
+    <rect x="43" y="103" width="4" height="9" fill="#0B2D5C"/>
+  </g>
+  <path d="M18 176 Q95 228 238 143" fill="none" stroke="#14B8A6" stroke-width="13" stroke-linecap="round"/>
+</svg>
