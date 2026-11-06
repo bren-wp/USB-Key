@@ -15,7 +15,6 @@ public sealed class UsbKeyManager
 {
     private const string TokenDirectory = ".brendigo-usb-key";
     private const string TokenFilename = "key.json";
-    private const int MaxTokenFileBytes = 2048;
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
 
     private readonly string _appFolder = Path.Combine(
@@ -41,8 +40,10 @@ public sealed class UsbKeyManager
         get => _state.AutoLock;
         set
         {
+            bool previous = _state.AutoLock;
             _state.AutoLock = value;
-            Save();
+            try { Save(); }
+            catch { _state.AutoLock = previous; throw; }
             ResetMonitor();
             WriteEvent(value ? "Automatsko zaključavanje uključeno." : "Automatsko zaključavanje isključeno.");
         }
@@ -81,6 +82,7 @@ public sealed class UsbKeyManager
 
         string directory = Path.Combine(driveRoot, TokenDirectory);
         string file = Path.Combine(directory, TokenFilename);
+        EnsureSafePaths(directory, file);
         UsbTokenFile token;
         if (File.Exists(file))
         {
@@ -90,11 +92,7 @@ public sealed class UsbKeyManager
         else
         {
             // Distinct random 256-bit secret PER stick; copying the file copies its identity.
-            token = new UsbTokenFile
-            {
-                Id = Guid.NewGuid(),
-                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32))
-            };
+            token = TokenCodec.CreateNew();
             Directory.CreateDirectory(directory);
             File.SetAttributes(directory, File.GetAttributes(directory) | FileAttributes.Hidden);
             using (var stream = new FileStream(file, FileMode.CreateNew, FileAccess.Write, FileShare.None))
@@ -107,7 +105,7 @@ public sealed class UsbKeyManager
             File.SetAttributes(file, File.GetAttributes(file) | FileAttributes.Hidden);
         }
 
-        string proof = GetProof(token);
+        string proof = TokenCodec.CalculateProof(token);
         if (_state.Keys.Any(k => k.Id == token.Id))
             throw new InvalidOperationException(
                 "Taj USB ključ već je registriran na ovom računu. Ne stvarajte njegovu kopiju.");
@@ -164,9 +162,10 @@ public sealed class UsbKeyManager
                 // Constant-time comparison of proofs. Neither the OS password nor a reusable
                 // Windows logon token is kept on the USB drive or in this registry.
                 byte[] expected = Convert.FromHexString(key.ProofHex);
-                byte[] actual = Convert.FromHexString(GetProof(token));
+                byte[] actual = Convert.FromHexString(TokenCodec.CalculateProof(token));
                 bool accepted = CryptographicOperations.FixedTimeEquals(expected, actual);
                 CryptographicOperations.ZeroMemory(actual);
+                CryptographicOperations.ZeroMemory(expected);
                 if (accepted) connected.Add(new ConnectedKey(key.Id, key.Name, root));
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException
@@ -188,19 +187,20 @@ public sealed class UsbKeyManager
         _previouslySeen = ids;
 
         // Arm only after a valid key was actually present in THIS app session.
-        // Two missed polls protect against transient drive enumeration failures.
+        // Three missed polls (approximately nine seconds) reduce false locking after USB re-enumeration.
         if (connected.Count > 0)
         {
             _armed = true;
             _missedScans = 0;
         }
-        else if (_armed && _state.AutoLock && ++_missedScans >= 2)
+        else if (_armed && _state.AutoLock && ++_missedScans >= 3)
         {
             _armed = false;
             _missedScans = 0;
-            WriteEvent("Uklonjen posljednji aktivni USB ključ; Windows je zaključan.");
-            if (!LockWorkStation())
-                WriteEvent("UPOZORENJE: Windows nije potvrdio zahtjev za zaključavanje.");
+            bool accepted = LockWorkStation();
+            WriteEvent(accepted
+                ? "Uklonjen posljednji aktivni USB ključ; zatraženo zaključavanje Windows sesije."
+                : "UPOZORENJE: Windows je odbio zahtjev za zaključavanje sesije.");
         }
         return connected;
     }
@@ -256,39 +256,41 @@ public sealed class UsbKeyManager
         finally { if (File.Exists(temp)) File.Delete(temp); }
     }
 
-    private static UsbTokenFile? ReadToken(string path)
+    private static void EnsureSafePaths(string directory, string file)
     {
-        if (!File.Exists(path)) return null;
-        var info = new FileInfo(path);
-        if (info.Length is < 10 or > MaxTokenFileBytes) return null;
-        byte[] content = File.ReadAllBytes(path);
-        try
-        {
-            var token = JsonSerializer.Deserialize<UsbTokenFile>(content);
-            if (token == null || token.Format != 1 || token.Id == Guid.Empty)
-                return null;
-            if (Convert.FromBase64String(token.Token).Length != 32) return null;
-            return token;
-        }
-        finally { CryptographicOperations.ZeroMemory(content); }
+        // Reject simple directory junctions/symlinks on the untrusted removable medium.
+        // This is a defense-in-depth check; an ordinary USB token is still copyable.
+        if (Directory.Exists(directory) &&
+            (File.GetAttributes(directory) & FileAttributes.ReparsePoint) != 0)
+            throw new IOException("USB mapa za ključ ne smije biti simbolička poveznica.");
+        if (File.Exists(file) &&
+            (File.GetAttributes(file) & FileAttributes.ReparsePoint) != 0)
+            throw new IOException("Datoteka USB ključa ne smije biti simbolička poveznica.");
     }
 
-    private static string GetProof(UsbTokenFile file)
+    private static UsbTokenFile? ReadToken(string path)
     {
-        byte[] secret = Convert.FromBase64String(file.Token);
-        byte[] prefix = Encoding.UTF8.GetBytes("Brendigo-USB-Key/v1/" + file.Id.ToString("N") + "/");
-        byte[] combined = new byte[prefix.Length + secret.Length];
-        prefix.CopyTo(combined, 0);
-        secret.CopyTo(combined, prefix.Length);
-        byte[] hash = SHA256.HashData(combined);
-        CryptographicOperations.ZeroMemory(secret);
-        CryptographicOperations.ZeroMemory(combined);
-        return Convert.ToHexString(hash);
+        string directory = Path.GetDirectoryName(path)
+            ?? throw new IOException("Neispravna putanja USB tokena.");
+        EnsureSafePaths(directory, path);
+        if (!File.Exists(path)) return null;
+        var info = new FileInfo(path);
+        if (info.Length is < 10 or > TokenCodec.MaxFileBytes) return null;
+
+        byte[] bytes = File.ReadAllBytes(path);
+        try
+        {
+            return TokenCodec.TryParse(bytes, out var token) ? token : null;
+        }
+        finally { CryptographicOperations.ZeroMemory(bytes); }
     }
 
     private void WriteEvent(string message)
     {
         string safeMessage = message.Replace('\r', ' ').Replace('\n', ' ');
+        // Keep local metadata bounded. The archive contains only the previous log segment.
+        if (File.Exists(_eventsPath) && new FileInfo(_eventsPath).Length > 1024 * 1024)
+            File.Move(_eventsPath, _eventsPath + ".previous.log", overwrite: true);
         File.AppendAllText(_eventsPath,
             DateTimeOffset.Now.ToString("yyyy-MM-dd HH:mm:ss zzz") + " | " +
             safeMessage + Environment.NewLine, Encoding.UTF8);
