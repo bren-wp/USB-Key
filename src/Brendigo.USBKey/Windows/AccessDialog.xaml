@@ -1,0 +1,62 @@
+<Window x:Class="Brendigo.USBKey.Windows.AccessDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Brendigo USB Key — pristup aplikaciji"
+        Icon="/Assets/brendigo-usb-key.ico"
+        Width="585" Height="570" MinWidth="510" MinHeight="420"
+        WindowStartupLocation="CenterScreen"
+        Background="#F2F6FA" FontFamily="Segoe UI">
+  <Grid Background="#F2F6FA">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <Border Grid.Row="0" Background="#0B2D5C" Padding="25,21">
+      <StackPanel Orientation="Horizontal">
+        <Image Source="/Assets/brendigo-usb-key.ico" Width="58" Height="58" Margin="0,0,15,0"/>
+        <StackPanel VerticalAlignment="Center">
+          <TextBlock x:Name="TitleText" Text="Brendigo USB Key" FontSize="23" FontWeight="Bold" Foreground="White"/>
+          <TextBlock Text="Zaštita lokalnog upravljanja" FontSize="12" Foreground="#79E6DE" Margin="0,5,0,0"/>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+      <StackPanel Margin="27,23,27,18">
+        <TextBlock x:Name="IntroText" TextWrapping="Wrap" Foreground="#486681" Margin="0,0,0,17"/>
+        <TextBlock x:Name="CurrentLabel" Text="Lozinka aplikacije" FontWeight="SemiBold" Margin="0,0,0,7"/>
+        <PasswordBox x:Name="CurrentPasswordBox" Height="44" Padding="10,8" FontSize="16"
+                     Margin="0,0,0,15" PasswordChanged="PasswordChanged"
+                     AutomationProperties.Name="Početna ili trenutačna lozinka"/>
+        <StackPanel x:Name="NewPasswordPanel" Margin="0,0,0,15">
+          <TextBlock Text="Nova privatna lozinka" FontWeight="SemiBold" Margin="0,0,0,7"/>
+          <PasswordBox x:Name="NewPasswordBox" Height="44" Padding="10,8" FontSize="16"
+                       PasswordChanged="PasswordChanged" AutomationProperties.Name="Nova privatna lozinka"/>
+        </StackPanel>
+        <StackPanel x:Name="ConfirmPanel" Margin="0,0,0,12">
+          <TextBlock Text="Ponovi novu lozinku" FontWeight="SemiBold" Margin="0,0,0,7"/>
+          <PasswordBox x:Name="ConfirmPasswordBox" Height="44" Padding="10,8" FontSize="16"
+                       PasswordChanged="PasswordChanged" AutomationProperties.Name="Potvrda nove lozinke"/>
+        </StackPanel>
+        <TextBlock x:Name="InitialHint" TextWrapping="Wrap" Foreground="#087969"
+                   FontWeight="SemiBold" Margin="0,0,0,13"/>
+        <Border Background="#E6F3FF" BorderBrush="#B5D9FA" BorderThickness="1"
+                Padding="13" CornerRadius="11">
+          <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#0B2D5C"
+                     Text="Lozinka štiti upravljanje aplikacijom, ali ne mijenja Windows lozinku ni Hello. USB otključavanje Windows prijave još nije implementirano."/>
+        </Border>
+        <TextBlock x:Name="StatusText" Margin="0,14,0,0" Foreground="#9B2432"
+                   TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite"/>
+      </StackPanel>
+    </ScrollViewer>
+    <Border Grid.Row="2" Background="White" BorderBrush="#D5E6F4" BorderThickness="0,1,0,0"
+            Padding="23,15">
+      <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+        <Button Content="Odustani" Width="120" IsCancel="True"
+                Margin="0,0,10,0" Style="{StaticResource SecondaryButton}"/>
+        <Button x:Name="ConfirmButton" Content="Potvrdi" Width="178" IsEnabled="False"
+                IsDefault="True" Click="Confirm_Click" Style="{StaticResource PrimaryButton}"/>
+      </StackPanel>
+    </Border>
+  </Grid>
+</Window>
