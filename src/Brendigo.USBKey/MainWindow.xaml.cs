@@ -14,6 +14,8 @@ namespace Brendigo.USBKey;
 public partial class MainWindow : Window
 {
     private readonly UsbKeyManager _manager;
+    private readonly AppPasswordService _access;
+    private bool _uiAuthenticated;
     private readonly DispatcherTimer _timer;
     private TrayController? _tray;
     private bool _exitRequested;
@@ -26,6 +28,7 @@ public partial class MainWindow : Window
     public MainWindow(bool visualPreview)
     {
         InitializeComponent();
+        _access = new AppPasswordService();
         try { _manager = new UsbKeyManager(); }
         catch (Exception ex)
         {
@@ -61,13 +64,36 @@ public partial class MainWindow : Window
         }
     }
 
-    private void ShowFromTray()
+    /// <summary>
+    /// Only a locally authenticated user may see or modify management UI.
+    /// USB monitoring can continue without this password when the window is hidden.
+    /// </summary>
+    public bool TryShowProtected()
     {
+        if (!_uiAuthenticated)
+        {
+            var mode = _access.IsConfigured
+                ? AccessDialogMode.Unlock : AccessDialogMode.InitialSetup;
+            var dialog = new AccessDialog(_access, mode);
+            if (dialog.ShowDialog() != true) return false;
+            _uiAuthenticated = true;
+        }
+
         ShowInTaskbar = true;
-        Show();
         WindowState = WindowState.Normal;
+        Show();
         Activate();
+        return true;
     }
+
+    public void ExitApplication()
+    {
+        _exitRequested = true;
+        Close();
+        Application.Current.Shutdown();
+    }
+
+    private void ShowFromTray() => TryShowProtected();
 
     private void LockFromTray()
     {
@@ -94,6 +120,7 @@ public partial class MainWindow : Window
             !Application.Current.Dispatcher.HasShutdownStarted)
         {
             e.Cancel = true;
+            _uiAuthenticated = false; // Closing the UI requires new authentication.
             Hide();
             _tray.ShowBackgroundHint();
             return;
@@ -391,6 +418,20 @@ public partial class MainWindow : Window
             { UseShellExecute = true });
         }
         catch (Exception ex) { ShowError("Nije moguće otvoriti mapu zapisnika", ex); }
+    }
+
+    private void ChangePassword_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if (!_uiAuthenticated)
+                throw new UnauthorizedAccessException("Pristup upravljanju nije potvrđen.");
+            var dialog = new AccessDialog(_access, AccessDialogMode.ChangePassword);
+            if (dialog.ShowDialog() == true)
+                MessageBox.Show(this, "Lozinka aplikacije uspješno je promijenjena.",
+                    "Brendigo USB Key", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch (Exception ex) { ShowError("Promjena lozinke nije uspjela", ex); }
     }
 
     private void SaveSettings_Click(object sender, RoutedEventArgs e)

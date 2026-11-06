@@ -68,7 +68,8 @@ public partial class SplashWindow : Window
             }
             var main = new MainWindow();
             Application.Current.MainWindow = main;
-            main.Show();
+            if (!main.TryShowProtected())
+                main.ExitApplication();
         }
 
         Close();

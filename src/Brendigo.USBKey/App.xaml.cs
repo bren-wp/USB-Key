@@ -44,12 +44,18 @@ public partial class App : Application
         {
             var dashboard = new MainWindow();
             MainWindow = dashboard;
-            dashboard.Show();
             if (autoStart)
             {
+                // USB monitoring begins immediately; no reusable shared password
+                // unlocks the UI. Tray activation always requests app authentication.
+                dashboard.Show();
                 dashboard.WindowState = WindowState.Minimized;
                 dashboard.ShowInTaskbar = false;
                 dashboard.Hide();
+            }
+            else if (!dashboard.TryShowProtected())
+            {
+                dashboard.ExitApplication();
             }
         }
         else
