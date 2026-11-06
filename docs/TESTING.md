@@ -50,3 +50,7 @@ GitHub Actions izvodi WPF Release build, smoke testove USB tokena i generira nep
 ## Prikaz nesigurnog očitanja USB-a
 
 Ako prethodno prepoznat USB ostaje priključen, ali mu nedostaje ili je oštećena datoteka tokena, nadzor ne smije zaključiti da je stick izvađen. Dashboard mora prikazati upozorenje o nepouzdanoj provjeri i odgodi automatskog zaključavanja. Nakon oporavka USB tokena treba ponoviti detekciju. Ovaj scenarij zahtijeva i fizički test na Windowsu; automatski smoke test provjerava samo logiku prepoznavanja takve situacije.
+
+## Lozinka upravljanja Brendigo USB Key
+
+Početna lozinka za prvo postavljanje je **Brendigo**. Testiraj da korisnik mora postaviti vlastitu lozinku od najmanje 12 znakova prije pristupa Dashboardu, da javna početna riječ nakon toga više ne radi, da zatvaranje glavnog prozora ponovno traži privatnu lozinku, da promjena iz postavki zahtijeva staru lozinku i da background USB monitoring ne prestane dok je upravljački UI zaključan. Automatski Windows smoke testovi provjeravaju DPAPI zapis, zamjenu i odgodu nakon pogrešaka, ali ne zamjenjuju stvarni test prijavljivanja na računalu.

@@ -33,6 +33,15 @@ Ovaj pregled je **ciljan, preliminaran i bez formalne penetracijske provjere**. 
 - Dashboard prikazuje odgođeni auto-lock i upozorenje za nepouzdano očitanje.
 - Ovo je izvorno-kodni i CI pregled, bez fizičkih uređaja ili neovisnog penetracijskog testiranja. Opseg 55 provjera ne obuhvaća sve rubne slučajeve Windows datotečnog sustava i autentifikacije.
 
+## Zaštita lokalnog upravljanja — 7. studenoga 2026.
+
+- Dodan prvi ulaz s traženom početnom lozinkom **Brendigo** i obveznom zamjenom vlastitom lozinkom, umjesto trajne zajedničke zaporke.
+- Sprema se samo lokalni provjerni zapis zaštićen Windows DPAPI-jem, PBKDF2-SHA256 (210.000 iteracija, nasumična 32-bajtna sol).
+- Upravljački prozor je zaštićen pri ručnom pokretanju i otvaranju iz system traya, ali lokalni nadzor USB-a može i dalje raditi u pozadini.
+- Dodani testovi pogrešne početne lozinke, inicijalizacije, promjene, trajnosti podataka, nevažeće stare lozinke i privremenog ograničenja pokušaja.
+- **Rizik:** lokalnu zaštitu mogu zaobići procesi koji već imaju jednak pristup korisničkom Windows profilu i programskim datotekama. Ograničenje pokušaja je samo unutar procesa; ne postoji neovisna revizija ni hardverska prijava.
+- Pravi Windows sign-in nije izmijenjen. USB otključavanje zaslona i dalje nije implementirano.
+
 ## Rizici koji i dalje postoje
 
 1. **Visok:** datoteka na običnom USB-u može se kopirati, stoga nije kriptografski neklonabilna.

@@ -45,6 +45,8 @@ Pri prvom otvaranju upravljanja Brendigo USB Key traži **početnu lozinku: `Bre
 
 Ovo **nije Windows lozinka** i ne mijenja Windows Hello niti podatke za prijavu u Windows. Pristup je lokalno ograničen na korisnikov Windows profil; nije zamišljen kao zaštita od zlonamjernog programa ili administratora s pristupom tom profilu. Brendigo USB Key i dalje ne otključava zaključani Windows putem običnog USB sticka.
 
+[Upute o početnoj lozinci i oporavku na hrvatskom](docs/APP-PASSWORD-HR.md) · [English password guide](docs/APP-PASSWORD-EN.md)
+
 ## Stvarni prikazi aplikacije
 
 Ove PNG snimke nastale su **iz stvarnih WPF/XAML kontrola** automatskim renderiranjem na Windows CI računalu. Nisu AI koncepti ni zamjenske ilustracije. Prikazuju sadržaj programa bez Windowsove naslovne trake. **Ne dokazuju još pixel-perfect 1:1 podudaranje** s referencama na fizičkim zaslonima, a nisu test interakcija na stvarnim USB uređajima.

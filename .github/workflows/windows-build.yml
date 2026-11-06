@@ -103,12 +103,16 @@ jobs:
           Copy-Item "docs/SETUP-USB-HR.md" "artifacts/package/USB-Guides/"
           Copy-Item "docs/SETUP-USB-EN.md" "artifacts/package/USB-Guides/"
           Copy-Item "docs/TROUBLESHOOTING-HR.md" "artifacts/package/USB-Guides/"
+          Copy-Item "docs/APP-PASSWORD-HR.md" "artifacts/package/USB-Guides/"
+          Copy-Item "docs/APP-PASSWORD-EN.md" "artifacts/package/USB-Guides/"
           Copy-Item "docs/RELEASE-NOTES-HR.md" "artifacts/package/USB-Guides/"
           Compress-Archive -Path artifacts/package/* -DestinationPath artifacts/Brendigo-USB-Key-win-x64-portable.zip -Force
           New-Item -ItemType Directory -Force -Path artifacts/usb-kit | Out-Null
           Copy-Item "docs/SETUP-USB-HR.md" "artifacts/usb-kit/"
           Copy-Item "docs/SETUP-USB-EN.md" "artifacts/usb-kit/"
           Copy-Item "docs/TROUBLESHOOTING-HR.md" "artifacts/usb-kit/"
+          Copy-Item "docs/APP-PASSWORD-HR.md" "artifacts/usb-kit/"
+          Copy-Item "docs/APP-PASSWORD-EN.md" "artifacts/usb-kit/"
           Copy-Item "tools/Install-To-USB.ps1" "artifacts/usb-kit/"
           Copy-Item "artifacts/Brendigo-USB-Key-Portable.exe" "artifacts/usb-kit/"
           "Brendigo USB Key - USB Setup Kit. This package contains only instructions. Register each USB separately. Never copy key.json between USB drives. Windows sign-in still requires your normal Windows password or Hello. Author: Brendigo | brendigo.com" | Set-Content "artifacts/usb-kit/START-HERE.txt" -Encoding utf8

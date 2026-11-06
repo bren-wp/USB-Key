@@ -1,5 +1,13 @@
 # Sigurnosni model — Brendigo USB Key 0.2
 
+## Lokalna lozinka upravljanja
+
+Početna lozinka aplikacije **Brendigo** vrijedi samo pri postavljanju lokalnog upravljačkog sučelja. Prvo otvaranje zahtijeva odabir vlastite lozinke od najmanje 12 znakova; nakon postavljanja početna više ne radi. Za pristup Dashboardu i nakon povratka iz Windows obavijesnog područja potrebna je vlastita lozinka. Promjena lozinke zahtijeva staru.
+
+Zapis je zaštićen Windows DPAPI CurrentUser mehanizmom; pohranjuje PBKDF2-SHA256 hash s odvojenom nasumičnom soli (210.000 iteracija). Pet neuspjelih prijava aktivira privremeno odgađanje unutar pokrenutog procesa. **Ovo je samo lokalna zaštita UI-ja**: korisnik ili zlonamjerni proces koji ima pravo mijenjati korisničke datoteke može je zaobići. Nije pružatelj Windows vjerodajnica niti hardverski autentifikator.
+
+Ako se zaboravi privatna lozinka, Windows prijava i Hello i dalje rade. Lokalni zapis lozinke pristupa pohranjen je zasebno od registra USB ključeva i ne smije se automatski zamijeniti početnom lozinkom kada postoji konfiguracija.
+
 ## Granice sustava
 
 U ovoj verziji ne postoji komponenta koja može otključati Windows logon. Ne pohranjuju se Windows lozinke, Windows Hello PIN-ovi, hash lozinke sustava ili podaci za zaobilaženje prijave. Aplikacija ne mijenja Windowsove pružatelje vjerodajnica.
