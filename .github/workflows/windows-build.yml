@@ -61,12 +61,26 @@ jobs:
           git add assets/screenshots
           git diff --cached --quiet
           if ($LASTEXITCODE -eq 1) {
-            git commit -m "docs(ui): update 12 real WPF-rendered screen captures [skip ci]"
+            git commit -m "docs(ui): refresh actual WPF-rendered screenshots [skip ci]"
             if ($LASTEXITCODE -ne 0) { throw "Could not commit WPF screenshots" }
-            git push origin HEAD:main
-            if ($LASTEXITCODE -ne 0) {
-              Write-Warning "Screenshots were uploaded as an Actions artifact but not pushed to main."
+            $pushed = $false
+            for ($attempt = 1; $attempt -le 3; $attempt++) {
+              git fetch origin main
+              if ($LASTEXITCODE -ne 0) { break }
+              git rebase origin/main
+              if ($LASTEXITCODE -ne 0) {
+                git rebase --abort
+                Write-Warning "Concurrent screenshot changes prevent a safe rebase."
+                break
+              }
+              git push origin HEAD:main
+              if ($LASTEXITCODE -eq 0) { $pushed = $true; break }
             }
+            if (-not $pushed) {
+              Write-Warning "Screenshots remain available in the Actions artifact; push was safely skipped."
+            }
+            # A concurrent push must never invalidate otherwise passing WPF tests.
+            $global:LASTEXITCODE = 0
           }
 
       - name: Publish portable EXE, ZIP, USB setup kit and checksums
